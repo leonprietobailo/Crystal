@@ -7,68 +7,23 @@ namespace GameOfLife
 {
     class Rules
     {
-        private bool[] infected = new bool[9];
-        private bool[] healed = new bool[9];
+        // Hay que ver.
+        double m, n, dt, d, e, b, dx, dy;
         
-        // Añadir nuevas reglas.
-        public Rules(bool[] inf, bool[] heal)
+        public Rules(double mIn, double nIn, double dtIn, double dIn, double eIn, double bIn, double dxIn, double dyIn)
         {
-            infected = inf;
-            healed = heal;
+            m = mIn;
+            n = nIn;
+            dt = dtIn;
+            d = dIn;
+            e = eIn;
+            b = bIn;
+            dx = dxIn;
+            dy = dyIn;
         }
 
         public Rules()
         {
-        }
-        public void setConway()
-        {
-            infected[0] = false;
-            infected[1] = false;
-            infected[2] = true;
-            infected[3] = true;
-            infected[4] = false;
-            infected[5] = false;
-            infected[6] = false;
-            infected[7] = false;
-            infected[8] = false;
-
-            healed[0] = false;
-            healed[1] = false;
-            healed[2] = false;
-            healed[3] = true;
-            healed[4] = false;
-            healed[5] = false;
-            healed[6] = false;
-            healed[7] = false;
-            healed[8] = false;
-        }
-
-        public void setCOVID19()
-        {
-            infected[0] = false;
-            infected[1] = false;
-            infected[2] = true;
-            infected[3] = true;
-            infected[4] = true;
-            infected[5] = false;
-            infected[6] = false;
-            infected[7] = false;
-            infected[8] = false;
-
-            healed[0] = false;
-            healed[1] = false;
-            healed[2] = false;
-            healed[3] = true;
-            healed[4] = true;
-            healed[5] = false;
-            healed[6] = false;
-            healed[7] = false;
-            healed[8] = false;
-        }
-        public void setNewVirus(bool[] i, bool[] h)
-        {
-            infected = i;
-            healed = h;
         }
 
         public bool getNextStatus(int neighbors, bool isInfected)
@@ -83,15 +38,39 @@ namespace GameOfLife
             }
         }
 
-        //public void setRules(int i)
+        public void setRules()
+        {
+
+        }
+
+        //public void setCOVID19()
         //{
-        //    virusType = i;
+        //    infected[0] = false;
+        //    infected[1] = false;
+        //    infected[2] = true;
+        //    infected[3] = true;
+        //    infected[4] = true;
+        //    infected[5] = false;
+        //    infected[6] = false;
+        //    infected[7] = false;
+        //    infected[8] = false;
+
+        //    healed[0] = false;
+        //    healed[1] = false;
+        //    healed[2] = false;
+        //    healed[3] = true;
+        //    healed[4] = true;
+        //    healed[5] = false;
+        //    healed[6] = false;
+        //    healed[7] = false;
+        //    healed[8] = false;
+        //}
+        //public void setNewVirus(bool[] i, bool[] h)
+        //{
+        //    infected = i;
+        //    healed = h;
         //}
 
-        //public int getRules()
-        //{
-        //    return virusType;
-        //}
 
     }
 }
