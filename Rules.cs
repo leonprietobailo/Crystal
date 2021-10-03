@@ -8,35 +8,41 @@ namespace GameOfLife
     class Rules
     {
         // Hay que ver.
-        double m, n, dt, d, e, b, dx, dy;
-        
+        double[] rules = new double[8];
+
         public Rules(double mIn, double nIn, double dtIn, double dIn, double eIn, double bIn, double dxIn, double dyIn)
         {
-            m = mIn;
-            n = nIn;
-            dt = dtIn;
-            d = dIn;
-            e = eIn;
-            b = bIn;
-            dx = dxIn;
-            dy = dyIn;
+            rules[0] = mIn;
+            rules[1] = nIn;
+            rules[2] = dtIn;
+            rules[3] = dIn;
+            rules[4] = eIn;
+            rules[5] = bIn;
+            rules[6] = dxIn;
+            rules[7] = dyIn;
         }
 
         public Rules()
         {
         }
 
-        public bool getNextStatus(int neighbors, bool isInfected)
+        public double[] getRules()
         {
-            if (isInfected)
-            {
-                return infected[neighbors];
-            }
-            else
-            {
-                return healed[neighbors];
-            }
+            return rules;
         }
+
+
+        //public bool getNextStatus(int neighbors, bool isInfected)
+        //{
+        //    if (isInfected)
+        //    {
+        //        return infected[neighbors];
+        //    }
+        //    else
+        //    {
+        //        return healed[neighbors];
+        //    }
+        //}
 
         public void setRules()
         {
