@@ -17,16 +17,31 @@ namespace GameOfLife
         Rules r;
 
         //CONSTRUCTOR
+        public Grid(Grid grid)
+        {
+            i = grid.i;
+            j = grid.j;
+            r = grid.r;
+            array = new Cell[i, j];
+            for (int n = 0; n < i; n++)
+            {
+                for(int s = 0; s < j; s++)
+                {
+                    array[n, s] = new Cell(grid.array[n,s].getTemperature(), grid.array[n, s].getPhase());
+                }
+            }
+        }
+
         public Grid(int iIn, int jIn)
         {
-            this.i = iIn + 2;
-            this.j = jIn + 2;
-            this.array = new Cell[this.i, this.j];
+            i = iIn + 2;
+            j = jIn + 2;
+            array = new Cell[this.i, this.j];
             for (int n = 0; n < this.i; n++)
             {
                 for (int s = 0; s < this.j; s++)
                 {
-                    array[n, s] = new Cell(0, 0);
+                    array[n, s] = new Cell(-1, 1);
                 }
             }
             r = new Rules();
@@ -80,7 +95,7 @@ namespace GameOfLife
             {
                 for (int s = 1; s < j - 1; s++)
                 {
-                    array[n, s] = new Cell(0, 0);
+                    array[n, s] = new Cell(-1, 1);
                 }
             }
         }
@@ -133,14 +148,14 @@ namespace GameOfLife
             {
                 for (int n = 0; n < i; n++)
                 {
-                    array[n, 0] = new Cell(1, 1);
-                    array[n, j - 1] = new Cell(1, 1);
+                    array[n, 0] = new Cell(-1, 1);
+                    array[n, j - 1] = new Cell(-1, 1);
                 }
 
                 for (int s = 0; s < i; s++)
                 {
-                    array[0, s] = new Cell(1, 1);
-                    array[i - 1, s] = new Cell(1, 1);
+                    array[0, s] = new Cell(-1, 1);
+                    array[i - 1, s] = new Cell(-1, 1);
                 }
             }
         }
@@ -159,11 +174,11 @@ namespace GameOfLife
         //}
 
 
-        //public Grid deepCopy()
-        //{
-        //    Grid deepCopyGrid = new Grid(this);
-        //    return deepCopyGrid;
-        //}
+        public Grid deepCopy()
+        {
+            Grid deepCopyGrid = new Grid(this);
+            return deepCopyGrid;
+        }
 
         //public int countHealedNeighbors(int iIn, int jIn)
         //{
@@ -253,102 +268,88 @@ namespace GameOfLife
         //    return counter;
         //}
 
-        //public void saveGrid()
-        //{
-        //    SaveFileDialog dig = new SaveFileDialog();
-        //    dig.Filter = "(*.txt)|*.*";
-        //    dig.DefaultExt = "txt";
-            
+        public void saveGrid()
+        {
+            SaveFileDialog dig = new SaveFileDialog();
+            dig.Filter = "(*.txt)|*.*";
+            dig.DefaultExt = "txt";
 
-        //    if (dig.ShowDialog() == true)
-        //    {
-        //        FileStream emptyFile = File.Create(dig.FileName);
-        //        emptyFile.Close();
-        //        for (int n = 0; n < this.i; n++)
-        //        {
-        //            for (int s = 0; s < this.j; s++)
-        //            {
-        //                if (array[n, s].getStatus())
-        //                {
-        //                    File.AppendAllText(dig.FileName, "1");
-        //                }
-        //                else
-        //                {
-        //                    File.AppendAllText(dig.FileName, "0");
-        //                }
-        //                if (s != j - 1)
-        //                {
-        //                    File.AppendAllText(dig.FileName, " ");
-        //                }
-        //            }
-        //            if (n != i - 1)
-        //            {
-        //                File.AppendAllText(dig.FileName, "\n");
-        //            }
-        //        }
 
-        //    }
-        //}
+            if (dig.ShowDialog() == true)
+            {
+                FileStream emptyFile = File.Create(dig.FileName);
+                emptyFile.Close();
+                for (int n = 0; n < this.i; n++)
+                {
+                    for (int s = 0; s < this.j; s++)
+                    {
+                        File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getTemperature()));
+                        File.AppendAllText(dig.FileName, "|");
+                        File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getPhase()));
+                        if (s != j - 1)
+                        {
+                            File.AppendAllText(dig.FileName, " ");
+                        }
+                    }
+                    if (n != i - 1)
+                    {
+                        File.AppendAllText(dig.FileName, "\n");
+                    }
+                }
+            }
+        }
 
-        //public void loadGrid()
-        //{
-        //    var n = 0;
-        //    var s = 0;
-        //    Boolean readColumns = false;
+        public void loadGrid()
+        {
+            var n = 0;
+            var s = 0;
+            bool readColumns = false;
 
-        //    OpenFileDialog dig = new OpenFileDialog();
-        //    dig.Multiselect = false;
-        //    dig.Filter = "(*.txt*)|*.*";
-        //    dig.DefaultExt = ".txt";
-        //    if (dig.ShowDialog() == true)
-        //    {
-        //        StreamReader countFile = new StreamReader(dig.FileName);
-        //        string strReadline = countFile.ReadLine();
-        //        while (strReadline != null)
-        //        {
-        //            if (!readColumns)
-        //            {
-        //                s = strReadline.Length;
-        //                readColumns = true;
-        //            }
-        //            n++;
-        //            strReadline = countFile.ReadLine();
-        //        }
-        //        countFile.Close();
+            OpenFileDialog dig = new OpenFileDialog();
+            dig.Multiselect = false;
+            dig.Filter = "(*.txt*)|*.*";
+            dig.DefaultExt = ".txt";
+            if (dig.ShowDialog() == true)
+            {
+                StreamReader countFile = new StreamReader(dig.FileName);
+                string strReadline = countFile.ReadLine();
+                while (strReadline != null)
+                {
+                    if (!readColumns)
+                    {
+                        
+                        s = strReadline.Split('|').Length - 1;
+                        readColumns = true;
+                    }
+                    n++;
+                    strReadline = countFile.ReadLine();
+                }
+                countFile.Close();
 
-        //        StreamReader readFile = new StreamReader(dig.FileName);
-        //        int rows = n;
-        //        int columns = (s + 1) / 2;
-        //        Grid loadedGrid = new Grid(rows, columns);
-        //        strReadline = readFile.ReadLine();
-        //        s = 0;
-        //        while (strReadline != null)
-        //        {
-        //            string[] subs = strReadline.Split(' ');
-        //            for (n = 0; n < subs.Length; n++)
-        //            {
-        //                if (subs[n] == "1")
-        //                {
-        //                    loadedGrid.changeCellStatus(s, n);
-        //                }
-        //                else if (subs[n] == "0")
-        //                {
-        //                }
-        //                else
-        //                {
-        //                    throw new FileFormatException();
-        //                }
-
-        //            }
-        //            strReadline = readFile.ReadLine();
-        //            s++;
-        //        }
-        //        readFile.Close();
-        //        this.i = rows;
-        //        this.j = columns;
-        //        this.array = loadedGrid.array;
-        //    }
-        //}
+                StreamReader readFile = new StreamReader(dig.FileName);
+                int rows = n;
+                int columns = s;
+                Grid loadedGrid = new Grid(rows, columns);
+                strReadline = readFile.ReadLine();
+                s = 0;
+                string[] temperaturePhase;
+                while (strReadline != null)
+                {
+                    string[] subs = strReadline.Split(' ');
+                    for (n = 0; n < subs.Length; n++)
+                    {
+                        temperaturePhase = subs[n].Split('|');
+                        loadedGrid.array[s, n] = new Cell(Convert.ToDouble(temperaturePhase[0]), Convert.ToDouble(temperaturePhase[1]));
+                    }
+                    strReadline = readFile.ReadLine();
+                    s++;
+                }
+                readFile.Close();
+                i = rows;
+                j = columns;
+                array = loadedGrid.array;
+            }
+        }
 
         //public Boolean isLastIteration()
         //{

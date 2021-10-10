@@ -39,7 +39,7 @@ namespace GameOfLife
             double dudt = du2dxy - 1 / d * (30 * Math.Pow(phase, 2) - 60 * Math.Pow(phase, 3) + 30 * Math.Pow(phase, 4)) * dPHIdt;
 
             // NEXT STATUS
-            phaseNext = phase + du2dxy * dt;
+            phaseNext = phase + dPHIdt * dt;
             temperatureNext = temperature + dudt * dt;
         }
 
