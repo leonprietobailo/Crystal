@@ -30,16 +30,16 @@ namespace GameOfLife
         Boolean timerStatus = false;
         long ticks;
         Rules r;
-        bool[] infected;
-        bool[] healed;
-        bool modified;
-        string name;
+        //bool[] infected;
+        //bool[] healed;
+        //bool modified;
+        //string name;
 
         public MainWindow()
         {
             InitializeComponent();
-            comboBox2.Items.Add("Dead boundaries");
-            comboBox2.Items.Add("Reflective boundaries");
+            comboBox2.Items.Add("Constant Phase and Temperature");
+            comboBox2.Items.Add("Reflective contour");
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
             mesh = new Grid(0, 0);
@@ -55,8 +55,6 @@ namespace GameOfLife
                     nRows = Convert.ToInt32(textBox1.Text);
                     nColumns = Convert.ToInt32(textBox2.Text);
                     mesh = new Grid(nRows, nColumns);
-                    r = new Rules(20, 20, 5e-6, 0.5, 0.005, 400, 0.005, 0.005);
-                    mesh.setRules(r);
                     rectangles1 = new Rectangle[nRows, nColumns];
                     rectangles2 = new Rectangle[nRows, nColumns];
                     canvas1.Children.Clear();
@@ -104,8 +102,8 @@ namespace GameOfLife
 
                     history.Clear();
                     history.Push(mesh.deepCopy());
-                    comboBox2.SelectedIndex = 1;
-                    showElements();
+                    comboBox2.SelectedIndex = 0;
+                    showElements1();
 
                     if (mesh.getSize()[0] == 0 || mesh.getSize()[1] == 0)
                     {
@@ -127,27 +125,22 @@ namespace GameOfLife
             }
         }
 
-        private void showElements()
+        private void showElements1()
         {
             if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
             {
-                comboBox2.Visibility = Visibility.Visible;
-                label8.Visibility = Visibility.Visible;
-                image2.Visibility = Visibility.Visible;
-                speedLabel.Visibility = Visibility.Visible;
-                speedSlider.Visibility = Visibility.Visible;
-                buttonStart.Visibility = Visibility.Visible;
-                buttonStart.Background = Brushes.SpringGreen;
-                buttonStart.BorderBrush = Brushes.White;
-                buttonStart.Foreground = Brushes.White;
-                label5.Visibility = Visibility.Hidden;
-                textBox1.Text = Convert.ToString(mesh.getSize()[0]);
-                textBox2.Text = Convert.ToString(mesh.getSize()[1]);
-                restart.Visibility = Visibility.Visible;
-                saveSimulation.Visibility = Visibility.Visible;
-                previousIteration.Visibility = Visibility.Visible;
-                nextIteration.Visibility = Visibility.Visible;
+                Settings.Visibility= Visibility.Visible;
             }
+        }
+        private void showElements2()
+        {
+            buttonStart.Background = Brushes.SpringGreen;
+            buttonStart.BorderBrush = Brushes.White;
+            buttonStart.Foreground = Brushes.White;
+            label5.Visibility = Visibility.Hidden;
+            textBox1.Text = Convert.ToString(mesh.getSize()[0]);
+            textBox2.Text = Convert.ToString(mesh.getSize()[1]);
+            SimControls.Visibility = Visibility.Visible;
         }
         private void rectangle_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -307,6 +300,42 @@ namespace GameOfLife
             mesh.saveGrid();
         }
 
+        private void LoadParameters(object sender, RoutedEventArgs e)
+        {
+            if (TabControl.SelectedIndex==0)
+            {
+                r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
+                mesh.setRules(r);
+                Correctparameters.Visibility = Visibility.Visible;
+                showElements2();
+            }
+            if (TabControl.SelectedIndex == 1)
+            {
+                r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
+                mesh.setRules(r);
+                Correctparameters.Visibility = Visibility.Visible;
+                showElements2();
+
+            }
+            if (TabControl.SelectedIndex == 2)
+            {
+                try
+                {
+                    r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
+                    mesh.setRules(r);
+                    Wrongparameters.Visibility = Visibility.Hidden;
+                    Correctparameters.Visibility = Visibility.Visible;
+                    showElements2();
+                }
+                catch (FormatException)
+                {
+                    Wrongparameters.Visibility=Visibility.Visible;
+                    Correctparameters.Visibility = Visibility.Hidden;
+                }
+            }
+
+        }
+
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -354,12 +383,9 @@ namespace GameOfLife
                 //comboBox2.SelectedIndex = 0;
 
                 //showElements();
+                //r = new Rules(20, 5e-6, 0.5, 0.005, 400, 0.005, 0.005);  //HAY QUE RETIRARLO
+                //mesh.setRules(r);
 
-
-
-
-                r = new Rules(20, 20, 5e-6, 0.5, 0.005, 400, 0.005, 0.005);  //HAY QUE RETIRARLO
-                mesh.setRules(r);
                 rectangles1 = new Rectangle[nRows, nColumns];
                 rectangles2 = new Rectangle[nRows, nColumns];
                 canvas1.Children.Clear();
@@ -409,7 +435,7 @@ namespace GameOfLife
                 history.Push(mesh.deepCopy());
                 comboBox2.SelectedIndex = 1;
                 updateMesh();
-                showElements();
+                showElements1();
             }
             catch (FileFormatException)
             {
