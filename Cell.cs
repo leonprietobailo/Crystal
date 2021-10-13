@@ -22,13 +22,12 @@ namespace GameOfLife
             // ESTRUCTURA VECTOR 
             double[] rules = r.getRules();
             double m = rules[0];
-            double n = rules[1];  // ATENTO
-            double dt = rules[2];
-            double d = rules[3];
-            double e = rules[4];
-            double b = rules[5];
-            double dx = rules[6];
-            double dy = rules[7];
+            double dt = rules[1];
+            double d = rules[2];
+            double e = rules[3];
+            double b = rules[4];
+            double dx = rules[5];
+            double dy = rules[6];
 
             // PHASE
             double dPHI2dxy = (pN[2] - 2 * phase + pN[1]) / dx / dx + (pN[0] - 2 * phase + pN[3]) / dy / dy;
@@ -59,79 +58,5 @@ namespace GameOfLife
         {
             return phase;
         }
-
-
-
-
-        //METODOS
-        //public void healCell()
-        //{
-        //    this.infected = false;
-        //}
-
-        //public void sickCell()
-        //{
-        //    this.infected = true;
-        //}
-
-        //public void changeStatus()
-        //{
-        //    if (this.infected)
-        //    {
-        //        this.infected = false;
-        //    }
-        //    else
-        //    {
-        //        this.infected = true;
-        //    }
-        //}
-
-        //public void setNextStatus(Rules r, int neighborsHealed)
-        //{
-        //    int neighborsIinfected = 8 - neighborsHealed;
-        //    if (r.getRules() == 0) // CONWAY
-        //    {
-
-        //        if (infected) // C = 1
-        //        {
-        //            if (neighborsIinfected < 2 || neighborsIinfected > 3)
-        //            {
-        //                infected = false;
-        //            }
-        //        }
-        //        else // C = 0
-        //        {
-        //            if (neighborsIinfected == 3)
-        //            {
-        //                infected = true;
-        //            }
-        //        }
-        //    }
-
-        //    else //COVID19
-        //    {
-        //        if (infected) // C = 1
-        //        {
-        //            if (neighborsIinfected < 2 || neighborsIinfected > 4)
-        //            {
-        //                infected = false;
-        //            }
-        //        }
-        //        else // C = 0
-        //        {
-        //            if (neighborsIinfected == 3 || neighborsIinfected == 4)
-        //            {
-        //                infected = true;
-        //            }
-        //        }
-        //    }
-
-        //}
-
-        //public void setNextStatus(Rules r, int neighborsHealed)
-        //{
-        //    int neighborsInfected = 8 - neighborsHealed;
-        //    infected = r.getNextStatus(neighborsInfected, infected);
-        //}
     }
 }

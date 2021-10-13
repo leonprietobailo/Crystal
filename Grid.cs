@@ -47,30 +47,9 @@ namespace GameOfLife
             r = new Rules();
         }
 
-        // MODIFICAR
-        //public Grid(Grid mesh)
-        //{
-        //    array = new Cell[mesh.getSize()[0] + 2, mesh.getSize()[1] + 2];
-
-        //    for (int n = 0; n < mesh.i; n++)
-        //    {
-        //        for (int s = 0; s < mesh.j; s++)
-        //        {
-        //            array[n, s] = new Cell();
-        //            if (mesh.getCellStatus(n, s))
-        //            {
-        //                array[n, s].changeStatus();
-        //            }
-        //        }
-        //    }
-        //    i = array.GetLength(0);
-        //    j = array.GetLength(1);
-        //    r = mesh.r;
-        //}
-
-        public void setRules(Rules r)
+        public void setRules(Rules rules)
         {
-            this.r = r;
+            r = rules;
         }
 
         public void setBoundaries(int b)
@@ -86,9 +65,6 @@ namespace GameOfLife
             size[1] = j - 2;
             return size;
         }
-
-
-        // RETOCAR
         public void reset()
         {
             for (int n = 1; n < i - 1; n++)
@@ -160,62 +136,11 @@ namespace GameOfLife
             }
         }
 
-
-
-        //public void changeCellStatus(int iIn, int jIn)
-        //{
-        //    array[iIn, jIn].changeStatus();
-        //}
-
-        // MODIFICAR
-        //public Boolean getCellStatus(int iIn, int jIn)
-        //{
-        //    return array[iIn, jIn].getStatus();
-        //}
-
-
         public Grid deepCopy()
         {
             Grid deepCopyGrid = new Grid(this);
             return deepCopyGrid;
         }
-
-        //public int countHealedNeighbors(int iIn, int jIn)
-        //{
-        //    int healed = 0;
-
-        //    for (int n = iIn - 1; n <= iIn + 1; n++)
-        //    {
-        //        for (int s = jIn - 1; s <= jIn + 1; s++)
-        //        {
-        //            if (!(n == iIn && s == jIn))
-        //            {
-        //                if (!array[n, s].getStatus())
-        //                {
-        //                    healed++;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return healed;
-        //}
-
-        //public void iterate()
-        //{
-        //    int neighborsHealed;
-        //    Grid temporary = this.deepCopy();
-        //    for (int n = 1; n < i - 1; n++)
-        //    {
-        //        for (int s = 1; s < j - 1; s++)
-        //        {
-        //            {
-        //                neighborsHealed = countHealedNeighbors(n, s);
-        //                temporary.array[n, s].setNextStatus(r, neighborsHealed);
-        //            }
-        //        }
-        //    }
-        //    this.array = temporary.array;
-        //}
 
         public void Iterate()
         {
@@ -249,24 +174,6 @@ namespace GameOfLife
                 }
             }
         }
-
-
-        //public int countInfected()
-        //{
-        //    int counter = 0;
-
-        //    for (int n = 1; n < this.i - 1; n++)
-        //    {
-        //        for (int s = 1; s < this.j - 1; s++)
-        //        {
-        //            if (array[n, s].getStatus())
-        //            {
-        //                counter++;
-        //            }
-        //        }
-        //    }
-        //    return counter;
-        //}
 
         public void saveGrid()
         {
@@ -350,38 +257,5 @@ namespace GameOfLife
                 array = loadedGrid.array;
             }
         }
-
-        //public Boolean isLastIteration()
-        //{
-        //    Grid copy;
-        //    copy = this.deepCopy();
-        //    copy.iterate();
-        //    for (int n = 0; n < this.i; n++)
-        //    {
-        //        for (int s = 0; s < this.j; s++)
-        //        {
-        //            if (!copy.getCellStatus(n, s) == this.getCellStatus(n, s))
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
-
-        //public Boolean isClean()
-        //{
-        //    for (int n = 0; n < this.i; n++)
-        //    {
-        //        for (int s = 0; s < this.j; s++)
-        //        {
-        //            if (this.getCellStatus(n, s))
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
     }
 }
