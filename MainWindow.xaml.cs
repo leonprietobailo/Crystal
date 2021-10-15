@@ -234,6 +234,7 @@ namespace GameOfLife
                 mesh.setRules(r);
                 Correctparameters.Visibility = Visibility.Visible;
                 showElements2();
+
             }
             if (TabControl.SelectedIndex == 1)
             {
@@ -255,7 +256,7 @@ namespace GameOfLife
                 }
                 catch (FormatException)
                 {
-                    Wrongparameters.Visibility=Visibility.Visible;
+                    Wrongparameters.Visibility = Visibility.Visible;
                     Correctparameters.Visibility = Visibility.Hidden;
                 }
             }
