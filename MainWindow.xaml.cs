@@ -263,6 +263,15 @@ namespace GameOfLife
 
         }
 
+        private void canvas1_MouseEnter(object sender, MouseEventArgs e)
+        {
+        //    Rectangle reg = (Rectangle)sender;
+        //    Point p = (Point)reg.Tag;
+        //    p.X++;
+        //    p.Y++;
+        //    PhaseData.Content = mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
+        }
+
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
             try
