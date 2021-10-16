@@ -8,8 +8,7 @@ namespace GameOfLife
     class Cell
     {
         // ATRIBUTOS
-        double temperature, phase, temperatureNext, phaseNext, dPHI2dxy, dPHIdt, du2dxy, dudt;
-        double[] pN2, uN2;
+        double temperature, phase, temperatureNext, phaseNext;
         //CONSTRUCTORES
         public Cell(double temperatureIn, double phaseIn)
         {
@@ -30,19 +29,16 @@ namespace GameOfLife
             double dy = rules[6];
             
             // PHASE
-            dPHI2dxy = (pN[2] - 2 * phase + pN[1]) / dx / dx + (pN[0] - 2 * phase + pN[3]) / dy / dy;
-            dPHIdt = 1 / e / e / m * (phase * (1 - phase) * (phase - 1 / 2 + 30 * e * b * d * temperature * phase * (1 - phase)) + e * e * dPHI2dxy);
+            double dPHI2dxy = (pN[2] - 2.0 * phase + pN[1]) / dx / dx + (pN[0] - 2.0 * phase + pN[3]) / dy / dy;
+            double dPHIdt = 1.0 / e / e / m * (phase * (1.0 - phase) * (phase - 1.0 / 2.0 + 30.0 * e * b * d * temperature * phase * (1.0 - phase)) + e * e * dPHI2dxy);
 
             // TEMPERATURE
-            du2dxy = (uN[2] - 2 * temperature + uN[1]) / dx / dx + (uN[0] - 2 * temperature + uN[3]) / dy / dy;
-            dudt = du2dxy - 1 / d * (30 * Math.Pow(phase, 2) - 60 * Math.Pow(phase, 3) + 30 * Math.Pow(phase, 4)) * dPHIdt;
+            double du2dxy = (uN[2] - 2.0 * temperature + uN[1]) / dx / dx + (uN[0] - 2.0 * temperature + uN[3]) / dy / dy;
+            double dudt = du2dxy - 1.0 / d * (30.0 * Math.Pow(phase, 2) - 60.0 * Math.Pow(phase, 3) + 30.0 * Math.Pow(phase, 4)) * dPHIdt;
 
             // NEXT STATUS
             phaseNext = phase + dPHIdt * dt;
             temperatureNext = temperature + dudt * dt;
-
-            uN2 = uN;
-            pN2 = pN;
         }
 
         public void setNextStatus()

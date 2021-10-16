@@ -161,7 +161,6 @@ namespace GameOfLife
                     pN[2] = array[n + 1, s].getPhase();
                     pN[3] = array[n, s - 1].getPhase();
 
-
                     array[n, s].getNextStatus(r, uN, pN);
                 }
             }
