@@ -7,6 +7,8 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.IO;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace GameOfLife
 {
@@ -23,15 +25,36 @@ namespace GameOfLife
         long ticks;
         Rules r;
 
+
+        public ChartValues<float> Values { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             comboBox2.Items.Add("Constant Phase and Temperature");
             comboBox2.Items.Add("Reflective contour");
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
             mesh = new Grid(0, 0);
-            
+
+
+
         }
 
         private void button1_Click(object sender, RoutedEventArgs e)
