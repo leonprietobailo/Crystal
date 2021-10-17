@@ -82,35 +82,33 @@
             <Label Name="Parameters" Content="Parameters" HorizontalAlignment="Left" Margin="86,-15,0,0" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold"/>
         </Grid>
         <Label Name="PhaseData" HorizontalAlignment="Left" Margin="460,73,0,0" VerticalAlignment="Top"/>
-        <!--<Grid Margin="490,371,363,124">
+        <Grid Margin="490,371,363,124">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <lvc:CartesianChart Grid.Row="2" Margin="0,0,-286,0">
-                <lvc:CartesianChart.AxisY>
-                    <lvc:Axis Foreground="DodgerBlue" Title="Blue Axis"/>
-                    <lvc:Axis Foreground="IndianRed" Title="Red Axis" Position="RightTop">
+            <lvc:CartesianChart Name="Chart1" Grid.Row="2" Margin="0,0,-286,0">
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Iteration">
                         <lvc:Axis.Separator>
-                            <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
+                            <lvc:Separator Step="1"></lvc:Separator>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
-                    <lvc:Axis Foreground="DarkOliveGreen" Title="Green Axis" Position="RightTop">
+                </lvc:CartesianChart.AxisX>
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Foreground="DodgerBlue" Title="Average Phase"/>
+                    <lvc:Axis Foreground="IndianRed" Title="Average Temperature" Position="RightTop">
                         <lvc:Axis.Separator>
-                            <lvc:Separator Style="{StaticResource CleanSeparator}"></lvc:Separator>
+                            <lvc:Separator></lvc:Separator>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisY>
                 <lvc:CartesianChart.Series>
-                    <lvc:LineSeries Values="1,5,3,5,3" ScalesYAt="0"/>
-                    --><!--Scales at blue axis, Axis[0]--><!--
-                    <lvc:LineSeries Values="20,30,70,20,10"  ScalesYAt="1"/>
-                    --><!--Scales at red axis, Axis[1]--><!--
-                    <lvc:LineSeries Values="600,300,200,600,800"  ScalesYAt="2"/>
-                    --><!--Scales at green axis, Axis[2]--><!--
+                    <lvc:LineSeries Name="blueAxis" ScalesYAt="0"/>
+                    <lvc:LineSeries Name="redAxis" ScalesYAt="1"/>
                 </lvc:CartesianChart.Series>
             </lvc:CartesianChart>
-        </Grid>-->
+        </Grid>
     </Grid>
 </Window>

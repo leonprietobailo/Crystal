@@ -25,9 +25,9 @@ namespace GameOfLife
             array = new Cell[i, j];
             for (int n = 0; n < i; n++)
             {
-                for(int s = 0; s < j; s++)
+                for (int s = 0; s < j; s++)
                 {
-                    array[n, s] = new Cell(grid.array[n,s].getTemperature(), grid.array[n, s].getPhase());
+                    array[n, s] = new Cell(grid.array[n, s].getTemperature(), grid.array[n, s].getPhase());
                 }
             }
         }
@@ -223,7 +223,7 @@ namespace GameOfLife
                 {
                     if (!readColumns)
                     {
-                        
+
                         s = strReadline.Split('|').Length - 1;
                         readColumns = true;
                     }
@@ -255,6 +255,39 @@ namespace GameOfLife
                 j = columns;
                 array = loadedGrid.array;
             }
+        }
+
+        public double getAveragePhase()
+        {
+            int counter = 0;
+            double totalPhase = 0;
+            for (int n = 1; n < this.i - 1; n++)
+            {
+                for (int s = 1; s < this.j - 1; s++)
+                {
+                    totalPhase += array[n, s].getPhase();
+                    counter++;
+                }
+            }
+
+            return totalPhase / counter;
+        }
+
+        public double getAverageTemperature()
+        {
+            int counter = 0;
+            double totalTemperature = 0;
+            for (int n = 1; n < this.i - 1; n++)
+            {
+                for (int s = 1; s < this.j - 1; s++)
+                {
+                    totalTemperature += array[n, s].getTemperature();
+                    counter++;
+                }
+            }
+
+            return totalTemperature / counter;
+
         }
     }
 }

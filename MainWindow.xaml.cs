@@ -24,38 +24,49 @@ namespace GameOfLife
         bool timerStatus;
         long ticks;
         Rules r;
-
-
-        public ChartValues<float> Values { get; set; }
+        ChartValues<double> PhaseValues = new ChartValues<double>();
+        ChartValues<double> TemperatureValues = new ChartValues<double>();
 
         public MainWindow()
         {
             InitializeComponent();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             comboBox2.Items.Add("Constant Phase and Temperature");
             comboBox2.Items.Add("Reflective contour");
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
             mesh = new Grid(0, 0);
+            setChartNumbers();
+            
 
 
 
         }
+
+        public SeriesCollection SeriesCollection { get; set; }
+
+        private void setChartNumbers()
+        {
+            
+            SeriesCollection = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Avg.Phase",
+                    Values = PhaseValues,
+                    ScalesYAt = 0
+                },
+                new LineSeries
+                {
+                    Title = "Avg.Temperature",
+                    Values = TemperatureValues,
+                    ScalesYAt = 1
+                }
+            };
+
+            Chart1.Series = SeriesCollection;
+        }
+
+
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -70,7 +81,7 @@ namespace GameOfLife
                     rectangles2 = new Rectangle[nRows, nColumns];
                     canvas1.Children.Clear();
                     canvas2.Children.Clear();
-                    
+
                     for (int i = 0; i < nRows; i++)
                     {
                         for (int j = 0; j < nColumns; j++)
@@ -115,7 +126,8 @@ namespace GameOfLife
                     history.Push(mesh.deepCopy());
                     comboBox2.SelectedIndex = 0;
                     showElements1();
-
+                    PhaseValues.Add(mesh.getAveragePhase());
+                    TemperatureValues.Add(mesh.getAverageTemperature());
                     if (mesh.getSize()[0] == 0 || mesh.getSize()[1] == 0)
                     {
                         label5.Visibility = Visibility.Visible;
@@ -140,7 +152,7 @@ namespace GameOfLife
         {
             if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
             {
-                Settings.Visibility= Visibility.Visible;
+                Settings.Visibility = Visibility.Visible;
             }
         }
         private void showElements2()
@@ -170,8 +182,8 @@ namespace GameOfLife
             {
                 for (int j = 0; j < nColumns; j++)
                 {
-                    rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1-mesh.getCellPhase(i, j))), 0, 0, 255));
-                    rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1+mesh.getCellTemperature(i, j))), 255, 0, 0));
+                    rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1 - mesh.getCellPhase(i, j))), 0, 0, 255));
+                    rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1 + mesh.getCellTemperature(i, j))), 255, 0, 0));
                 }
             }
         }
@@ -183,6 +195,7 @@ namespace GameOfLife
                 buttonStart.Content = "Stop";
                 timer.Start();
                 timerStatus = true;
+                
             }
             else
             {
@@ -201,6 +214,8 @@ namespace GameOfLife
         {
             history.Push(mesh.deepCopy());
             mesh.Iterate();
+            PhaseValues.Add(mesh.getAveragePhase());
+            TemperatureValues.Add(mesh.getAverageTemperature());
             updateMesh();
         }
 
@@ -212,6 +227,8 @@ namespace GameOfLife
             {
                 timer.Stop();
                 mesh = history.Pop();
+                PhaseValues.RemoveAt(PhaseValues.Count - 1);
+                TemperatureValues.RemoveAt(TemperatureValues.Count - 1);
                 updateMesh();
             }
             catch (InvalidOperationException)
@@ -225,6 +242,8 @@ namespace GameOfLife
             timer.Stop();
             mesh.reset();
             history.Push(mesh.deepCopy());
+            PhaseValues.Clear();
+            TemperatureValues.Clear();
             updateMesh();
 
         }
@@ -234,6 +253,8 @@ namespace GameOfLife
             history.Push(mesh.deepCopy());
             mesh.Iterate();
             updateMesh();
+            PhaseValues.Add(mesh.getAveragePhase());
+            TemperatureValues.Add(mesh.getAverageTemperature());
         }
 
         private void speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -251,7 +272,7 @@ namespace GameOfLife
 
         private void LoadParameters(object sender, RoutedEventArgs e)
         {
-            if (TabControl.SelectedIndex==0)
+            if (TabControl.SelectedIndex == 0)
             {
                 r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
                 mesh.setRules(r);
@@ -288,11 +309,11 @@ namespace GameOfLife
 
         private void canvas1_MouseEnter(object sender, MouseEventArgs e)
         {
-        //    Rectangle reg = (Rectangle)sender;
-        //    Point p = (Point)reg.Tag;
-        //    p.X++;
-        //    p.Y++;
-        //    PhaseData.Content = mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
+            //    Rectangle reg = (Rectangle)sender;
+            //    Point p = (Point)reg.Tag;
+            //    p.X++;
+            //    p.Y++;
+            //    PhaseData.Content = mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
         }
 
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
