@@ -76,17 +76,6 @@ namespace GameOfLife
             }
         }
 
-        public void clickedCell(int x, int y)
-        {
-            if (array[x, y].getTemperature() == 0 && array[x, y].getPhase() == 0)
-            {
-                array[x, y] = new Cell(-1, 1);
-            }
-            else
-            {
-                array[x, y] = new Cell(0, 0);
-            }
-        }
 
         public double getCellPhase(int n, int s)
         {
@@ -96,6 +85,11 @@ namespace GameOfLife
         public double getCellTemperature(int n, int s)
         {
             return array[n + 1, s + 1].getTemperature();
+        }
+
+        public void startCell(int n, int s)
+        {
+            array[n + 1, s + 1] = new Cell(0,0);
         }
 
         // RETOCAR

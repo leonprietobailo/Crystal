@@ -93,7 +93,6 @@ namespace GameOfLife
                             Canvas.SetLeft(rectangle1, j * rectangle1.Width);
 
                             rectangle1.Tag = new Point(i, j);
-                            rectangle1.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
                             rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
                             rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles1[i, j] = rectangle1;
@@ -111,7 +110,6 @@ namespace GameOfLife
                             Canvas.SetLeft(rectangle2, j * rectangle2.Width);
 
                             rectangle2.Tag = new Point(i, j);
-                            rectangle2.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
                             rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
                             rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles2[i, j] = rectangle2;
@@ -120,7 +118,8 @@ namespace GameOfLife
                         }
                     }
 
-
+                    mesh.startCell((nRows-1) / 2, (nColumns - 1) / 2);
+                    updateMesh();
 
                     history.Clear();
                     history.Push(mesh.deepCopy());
@@ -157,6 +156,7 @@ namespace GameOfLife
                 GridandGraphs.Visibility= Visibility.Visible;
             }
         }
+
         private void showElements2()
         {
             buttonStart.Background = Brushes.SpringGreen;
@@ -168,28 +168,23 @@ namespace GameOfLife
             SimControls.Visibility = Visibility.Visible;
         }
 
-        private void rectangle_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Rectangle reg = (Rectangle)sender;
-            Point p = (Point)reg.Tag;
-            p.X++;
-            p.Y++;
-            mesh.clickedCell(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
-            updateMesh();
-        }
-
         private void rectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             Rectangle reg = (Rectangle)sender;
             Point p = (Point)reg.Tag;
-            CurrentPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
-            CurrentTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+            Cellstatus.Visibility = Visibility.Visible;
+            CellPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+            CellTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+            p.X++;
+            p.Y++;
+            Cellcoordinates1.Content = "("+ p.Y +","+ p.X +")";
+            Cellcoordinates2.Content = "("+ p.Y +","+ p.X +")";
+
         }
 
         private void rectangle_MouseLeave(object sender, MouseEventArgs e)
         {
-            CurrentPhase.Content = "";
-            CurrentTemperature.Content = "";
+            Cellstatus.Visibility = Visibility.Hidden;
         }
 
         // Reflejar visualmente los cambios.
@@ -290,7 +285,9 @@ namespace GameOfLife
             {
                 r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
                 mesh.setRules(r);
+                Correctparameters.Content = "Standard one loaded!";
                 Correctparameters.Visibility = Visibility.Visible;
+                Wrongparameters.Visibility = Visibility.Hidden;
                 showElements2();
 
             }
@@ -298,7 +295,9 @@ namespace GameOfLife
             {
                 r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
                 mesh.setRules(r);
+                Correctparameters.Content = "Standard two loaded!";
                 Correctparameters.Visibility = Visibility.Visible;
+                Wrongparameters.Visibility = Visibility.Hidden;
                 showElements2();
 
             }
@@ -308,6 +307,7 @@ namespace GameOfLife
                 {
                     r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
                     mesh.setRules(r);
+                    Correctparameters.Content = "Chosen values loaded!";
                     Wrongparameters.Visibility = Visibility.Hidden;
                     Correctparameters.Visibility = Visibility.Visible;
                     showElements2();
@@ -363,7 +363,6 @@ namespace GameOfLife
                         Canvas.SetLeft(rectangle1, j * rectangle1.Width);
 
                         rectangle1.Tag = new Point(i, j);
-                        rectangle1.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
                         rectangles1[i, j] = rectangle1;
 
                         // CANVAS 2
@@ -379,7 +378,6 @@ namespace GameOfLife
                         Canvas.SetLeft(rectangle2, j * rectangle2.Width);
 
                         rectangle2.Tag = new Point(i, j);
-                        rectangle2.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
                         rectangles2[i, j] = rectangle2;
 
 

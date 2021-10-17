@@ -25,23 +25,19 @@
             <Label Content="Speed" FontFamily="Consolas" Height="28" HorizontalAlignment="Left" Margin="133,6,0,0" x:Name="speedLabel" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" />
             <Button Content="Save simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="193,144,0,-71" x:Name="saveSimulation" VerticalAlignment="Top" Width="126" Click="saveSimulation_Click" BorderBrush="White" TabIndex="11" Background="#00000000" Foreground="White" FontWeight="Bold" />
         </Grid>
-        <Grid Name="Settings" HorizontalAlignment="Left" Height="250" Margin="21,234,0,0" VerticalAlignment="Top" Width="477" Visibility="hidden">
+        <Grid Name="Settings" HorizontalAlignment="Left" Height="260" Margin="21,224,0,0" VerticalAlignment="Top" Width="477" Visibility="hidden">
             <TabControl TabStripPlacement="Top" Name="TabControl" HorizontalAlignment="Left" Height="156" Margin="90,9,0,0" VerticalAlignment="Top" Width="267">
                 <TabItem Header="Standard one">
                     <Grid Background="Transparent">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="129*"/>
-                            <ColumnDefinition Width="122*"/>
-                        </Grid.ColumnDefinitions>
                         <Label Content="ε&#x0a;&#x0a;β&#x0a;&#x0a;Δ&#x0a;&#x0a;M&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="48,10,0,0" VerticalAlignment="Top" Height="113" Width="22" FontFamily="Consolas"/>
-                        <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas" Grid.ColumnSpan="2"/>
+                        <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas"/>
                         <TextBox Name="e1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="70,14,0,0" TextWrapping="Wrap" Text="0,005" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
                         <TextBox Name="b1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="70,42,0,0" TextWrapping="Wrap" Text="400" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
                         <TextBox Name="d1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="70,69,0,0" TextWrapping="Wrap" Text="0,5" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
                         <TextBox Name="m1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="70,98,0,0" TextWrapping="Wrap" Text="20" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
-                        <TextBox Name="dx1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="24.2,25,0,0" TextWrapping="Wrap" Text="0,005" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False" Grid.Column="1"/>
-                        <TextBox Name="dy1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="24.2,53,0,0" TextWrapping="Wrap" Text="0,005" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False" Grid.Column="1"/>
-                        <TextBox Name="dt1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="24.2,80,0,0" TextWrapping="Wrap" Text="5e-6" VerticalAlignment="Top" Width="41" FontFamily="Consolas" RenderTransformOrigin="0.459,0.941" IsEnabled="False" Grid.Column="1"/>
+                        <TextBox Name="dx1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,25,0,0" TextWrapping="Wrap" Text="0,005" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
+                        <TextBox Name="dy1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,53,0,0" TextWrapping="Wrap" Text="0,005" VerticalAlignment="Top" Width="41" FontFamily="Consolas" IsEnabled="False"/>
+                        <TextBox Name="dt1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,80,0,0" TextWrapping="Wrap" Text="5e-6" VerticalAlignment="Top" Width="41" FontFamily="Consolas" RenderTransformOrigin="0.459,0.941" IsEnabled="False"/>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Standard two">
@@ -57,8 +53,8 @@
                         <TextBox Name="dt2" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,80,0,0" TextWrapping="Wrap" Text="5e-6" VerticalAlignment="Top" Width="41" FontFamily="Consolas" RenderTransformOrigin="0.459,0.941" IsEnabled="False"/>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Chosen values" Margin="0.2,0,-14.2,0">
-                    <Grid Background="Transparent" Margin="0,1,-2.4,-1.2">
+                <TabItem Header="Chosen values" >
+                    <Grid Background="Transparent" >
                         <Label Content="ε&#x0a;&#x0a;β&#x0a;&#x0a;Δ&#x0a;&#x0a;M&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="48,10,0,0" VerticalAlignment="Top" Height="113" Width="22" FontFamily="Consolas"/>
                         <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas"/>
                         <TextBox Name="e3" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="70,14,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="41" FontFamily="Consolas"/>
@@ -71,13 +67,13 @@
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="51,192,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
-            <ComboBox Height="23" HorizontalAlignment="Left" Margin="132,192,0,0" x:Name="comboBox2" VerticalAlignment="Top" Width="226" SelectionChanged="comboBox2_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White" />
-            <Image Height="23" HorizontalAlignment="Left" Margin="372,192,0,0" x:Name="image2" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="image2_Click" VerticalAlignment="Top"/>
-            <Button Name="Loadparameters" Content="   Load&#x0a;Parameters" HorizontalAlignment="Left" Margin="389,54,0,0" VerticalAlignment="Top" Width="80" Height="44" FontFamily="Consolas" Background="#00000000" BorderBrush="White" Foreground="White" FontWeight="Bold" Click="LoadParameters"/>
-            <Label Visibility="hidden" Content="Wrong inputs!" FontFamily="Consolas" Margin="382,103,0,0" x:Name="Wrongparameters" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" />
-            <Label Visibility="Hidden" Content="Inputs loaded!" FontFamily="Consolas" Margin="382,103,0,0" x:Name="Correctparameters" Foreground="Green" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="105" />
-            <Label Name="Parameters" Content="Parameters" HorizontalAlignment="Left" Margin="86,-15,0,0" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold"/>
+            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="51,221,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
+            <ComboBox Height="23" HorizontalAlignment="Left" Margin="132,221,0,0" x:Name="comboBox2" VerticalAlignment="Top" Width="226" SelectionChanged="comboBox2_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White" />
+            <Image Height="23" HorizontalAlignment="Left" Margin="372,219,0,0" x:Name="image2" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="image2_Click" VerticalAlignment="Top"/>
+            <Button Name="Loadparameters" Content="Load parameters" HorizontalAlignment="Left" Margin="90,180,0,0" VerticalAlignment="Top" Width="118" Height="27" FontFamily="Consolas" Background="#00000000" BorderBrush="White" Foreground="White" FontWeight="Bold" Click="LoadParameters"/>
+            <Label Visibility="hidden" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="Wrong inputs!" FontFamily="Consolas" Margin="208,180,0,0" x:Name="Wrongparameters" Foreground="Red" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="140" />
+            <Label Visibility="hidden" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Consolas" Margin="208,180,0,0" x:Name="Correctparameters" Foreground="Green" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" />
+            <Label Name="Parameters" Content="Parameters" HorizontalAlignment="Left" Margin="86,-19,0,0" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold"/>
         </Grid>
         <Grid Visibility="hidden" Name="GridandGraphs" Margin="543,45,76,121">
             <Grid.RowDefinitions>
@@ -92,7 +88,7 @@
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis Title="Iteration" MinValue="0">
                         <lvc:Axis.Separator>
-                            <lvc:Separator Step="1"> </lvc:Separator>
+                            <lvc:Separator Step="1"></lvc:Separator>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
@@ -114,10 +110,14 @@
             <Canvas Height="250" HorizontalAlignment="Left" Margin="274,58,0,0" x:Name="canvas2" VerticalAlignment="Top" Width="250" Background="#00000000"/>
             <Label Content="Phase" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,34,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="250"/>
             <Label Content="Temperature" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="276,34,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="248"/>
-            <Label Content="Current Phase:" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="105"/>
-            <Label Content="Current Temperature:" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="276,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="143"/>
-            <Label Name="CurrentPhase" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="106,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="105"/>
-            <Label Name="CurrentTemperature" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="422,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="102"/>
+            <Grid Name="Cellstatus" Visibility="hidden">
+                <Label Name="Cellphase" Content="Cell Phase:" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="0,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="82"/>
+                <Label Name="Celltemperature" Content="Cell Temperature:" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="274,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="120"/>
+                <Label Name="CellPhase" HorizontalContentAlignment="left" HorizontalAlignment="Left" Margin="84,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="105"/>
+                <Label Name="CellTemperature" HorizontalContentAlignment="left" HorizontalAlignment="Left" Margin="396,308,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="102"/>
+                <Label Name="Cellcoordinates1" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="0,34,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="102"/>
+                <Label Name="Cellcoordinates2" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="274,34,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="80"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
