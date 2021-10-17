@@ -122,9 +122,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\GameIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\ReflectiveBoundaries.png" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +129,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\DeadBoundaries.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\SnowFlake.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

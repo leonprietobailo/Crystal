@@ -1,7 +1,7 @@
 ﻿<Window x:Class="GameOfLife.Window2"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Boundaries" Height="640" Width="1135" Icon="/GameOfLife;component/Images/GameIcon.png" Foreground="#FF232323" Background="#FF232323" ResizeMode="NoResize">
+        Title="Boundaries" Height="640" Width="1135" Icon="Images/SnowFlake.png" Foreground="#FF232323" Background="#FF232323" ResizeMode="NoResize">
     <Grid Background="#FF232323" Width="1040" Height="526">
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="222,20,0,0" Name="textBlock1" Text="Dead boundaries" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" />
         <TextBlock FontFamily="Consolas" Foreground="White" Height="23" HorizontalAlignment="Left" Margin="680,20,0,0" Name="textBlock2" Text="Reflective boundaries" VerticalAlignment="Top" FontWeight="Bold" />

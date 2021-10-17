@@ -36,10 +36,6 @@ namespace GameOfLife
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
             mesh = new Grid(0, 0);
             setChartNumbers();
-            
-
-
-
         }
 
         public SeriesCollection SeriesCollection { get; set; }
@@ -65,8 +61,6 @@ namespace GameOfLife
 
             Chart1.Series = SeriesCollection;
         }
-
-
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -100,6 +94,8 @@ namespace GameOfLife
 
                             rectangle1.Tag = new Point(i, j);
                             rectangle1.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
+                            rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                            rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles1[i, j] = rectangle1;
 
                             // CANVAS 2
@@ -116,11 +112,15 @@ namespace GameOfLife
 
                             rectangle2.Tag = new Point(i, j);
                             rectangle2.MouseDown += new MouseButtonEventHandler(rectangle_MouseDown);
+                            rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                            rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles2[i, j] = rectangle2;
 
 
                         }
                     }
+
+
 
                     history.Clear();
                     history.Push(mesh.deepCopy());
@@ -132,6 +132,7 @@ namespace GameOfLife
                     {
                         label5.Visibility = Visibility.Visible;
                     }
+
                 }
                 else
                 {
@@ -153,6 +154,7 @@ namespace GameOfLife
             if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
             {
                 Settings.Visibility = Visibility.Visible;
+                GridandGraphs.Visibility= Visibility.Visible;
             }
         }
         private void showElements2()
@@ -165,6 +167,7 @@ namespace GameOfLife
             textBox2.Text = Convert.ToString(mesh.getSize()[1]);
             SimControls.Visibility = Visibility.Visible;
         }
+
         private void rectangle_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Rectangle reg = (Rectangle)sender;
@@ -173,6 +176,20 @@ namespace GameOfLife
             p.Y++;
             mesh.clickedCell(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
             updateMesh();
+        }
+
+        private void rectangle_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Rectangle reg = (Rectangle)sender;
+            Point p = (Point)reg.Tag;
+            CurrentPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+            CurrentTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+        }
+
+        private void rectangle_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CurrentPhase.Content = "";
+            CurrentTemperature.Content = "";
         }
 
         // Reflejar visualmente los cambios.
@@ -219,8 +236,6 @@ namespace GameOfLife
             updateMesh();
         }
 
-
-
         private void previousIteration_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -235,7 +250,6 @@ namespace GameOfLife
             {
             }
         }
-
         private void restart_Click(object sender, RoutedEventArgs e)
         {
             history.Clear();
@@ -305,15 +319,6 @@ namespace GameOfLife
                 }
             }
 
-        }
-
-        private void canvas1_MouseEnter(object sender, MouseEventArgs e)
-        {
-            //    Rectangle reg = (Rectangle)sender;
-            //    Point p = (Point)reg.Tag;
-            //    p.X++;
-            //    p.Y++;
-            //    PhaseData.Content = mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y));
         }
 
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
