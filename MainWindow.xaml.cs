@@ -194,8 +194,16 @@ namespace GameOfLife
             {
                 for (int j = 0; j < nColumns; j++)
                 {
-                    rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1 - mesh.getCellPhase(i, j))), 0, 0, 255));
-                    rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(255 * (1 + mesh.getCellTemperature(i, j))), 255, 0, 0));
+                    double a = 255*Math.Pow(1.0-mesh.getCellPhase(i, j),1.0/4.0);
+                    double b = 255*Math.Sqrt(mesh.getCellTemperature(i, j) + 1);
+
+                    if (mesh.getCellTemperature(i, j) + 1 < 0)
+                    {
+                        b = 0;
+                    }
+
+                    rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(a), 0, 0, 255));
+                    rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(b), 255, 0, 0));
                 }
             }
         }
