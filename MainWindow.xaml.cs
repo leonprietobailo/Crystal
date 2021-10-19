@@ -16,12 +16,12 @@ namespace GameOfLife
     public partial class MainWindow : Window
     {
 
-        int nRows, nColumns;
+        int nRows, nColumns, rowinside, columninside;
         Rectangle[,] rectangles1, rectangles2;
         Stack<Grid> history = new Stack<Grid>();
         Grid mesh, copy1;
         DispatcherTimer timer = new DispatcherTimer();
-        bool timerStatus;
+        bool timerStatus, inside;
         long ticks;
         Rules r;
         ChartValues<double> PhaseValues = new ChartValues<double>();
@@ -42,7 +42,7 @@ namespace GameOfLife
 
         private void setChartNumbers()
         {
-            
+
             SeriesCollection = new SeriesCollection
             {
                 new LineSeries
@@ -85,7 +85,7 @@ namespace GameOfLife
                             rectangle1.Width = canvas1.Width / nColumns;
                             rectangle1.Height = canvas1.Height / nRows;
                             rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle1.StrokeThickness = 1;
+                            rectangle1.StrokeThickness = 0.1;
                             rectangle1.Stroke = Brushes.White;
                             canvas1.Children.Add(rectangle1);
 
@@ -102,7 +102,7 @@ namespace GameOfLife
                             rectangle2.Width = canvas2.Width / nColumns;
                             rectangle2.Height = canvas2.Height / nRows;
                             rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle2.StrokeThickness = 1;
+                            rectangle2.StrokeThickness = 0.1;
                             rectangle2.Stroke = Brushes.White;
                             canvas2.Children.Add(rectangle2);
 
@@ -118,7 +118,7 @@ namespace GameOfLife
                         }
                     }
 
-                    mesh.startCell((nRows-1) / 2, (nColumns - 1) / 2);
+                    mesh.startCell((nRows - 1) / 2, (nColumns - 1) / 2);
                     updateMesh();
 
                     history.Clear();
@@ -153,7 +153,7 @@ namespace GameOfLife
             if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
             {
                 Settings.Visibility = Visibility.Visible;
-                GridandGraphs.Visibility= Visibility.Visible;
+                GridandGraphs.Visibility = Visibility.Visible;
             }
         }
 
@@ -173,19 +173,32 @@ namespace GameOfLife
             Rectangle reg = (Rectangle)sender;
             Point p = (Point)reg.Tag;
             Cellstatus.Visibility = Visibility.Visible;
-            CellPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
-            CellTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)),5);
+            CellPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)), 5);
+            CellTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)), 5);
+            rowinside = Convert.ToInt32(p.X);
+            columninside = Convert.ToInt32(p.Y);
             p.X++;
             p.Y++;
-            Cellcoordinates1.Content = "("+ p.Y +","+ p.X +")";
-            Cellcoordinates2.Content = "("+ p.Y +","+ p.X +")";
-
+            Cellcoordinates1.Content = "(" + p.Y + "," + p.X + ")";
+            Cellcoordinates2.Content = "(" + p.Y + "," + p.X + ")";
+            inside = true;
         }
 
         private void rectangle_MouseLeave(object sender, MouseEventArgs e)
         {
             Cellstatus.Visibility = Visibility.Hidden;
+            inside = false;
         }
+
+        public void insideornot()
+        {
+            if (inside==true)
+            {
+                CellPhase.Content = Math.Round(mesh.getCellPhase(rowinside, columninside), 5);
+                CellTemperature.Content = Math.Round(mesh.getCellTemperature(rowinside, columninside), 5);
+            }
+        }
+
 
         // Reflejar visualmente los cambios.
         private void updateMesh()
@@ -237,6 +250,7 @@ namespace GameOfLife
             PhaseValues.Add(mesh.getAveragePhase());
             TemperatureValues.Add(mesh.getAverageTemperature());
             updateMesh();
+            insideornot();
         }
 
         private void previousIteration_Click(object sender, RoutedEventArgs e)
@@ -248,6 +262,7 @@ namespace GameOfLife
                 PhaseValues.RemoveAt(PhaseValues.Count - 1);
                 TemperatureValues.RemoveAt(TemperatureValues.Count - 1);
                 updateMesh();
+                insideornot();
             }
             catch (InvalidOperationException)
             {
@@ -262,6 +277,7 @@ namespace GameOfLife
             PhaseValues.Clear();
             TemperatureValues.Clear();
             updateMesh();
+            insideornot();
 
         }
 
@@ -272,12 +288,13 @@ namespace GameOfLife
             updateMesh();
             PhaseValues.Add(mesh.getAveragePhase());
             TemperatureValues.Add(mesh.getAverageTemperature());
+            insideornot();
         }
 
         private void speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
-            double time = -3.0 / 400.0 * (slider.Value * 10.0 - 400.0 / 3.0); //[s]
+            double time = -9.0 / 1000.0 * (slider.Value * 10.0 - 1000.0 / 9.0); //[s]
             ticks = Convert.ToInt64(time / 100e-9);
             timer.Interval = new TimeSpan(ticks);
         }
