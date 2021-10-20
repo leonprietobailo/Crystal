@@ -8,11 +8,9 @@
     <Grid Background="#FF232323" Height="745">
         <Label Content="Crystal Simulator" x:Name="label1" Margin="111,45,0,0" FontSize="29" FontFamily="Consolas" Foreground="White" BorderBrush="#FF262626" FontWeight="Bold" HorizontalAlignment="Left" Width="283" Height="45" VerticalAlignment="Top" Background="#00000000"/>
         <Grid HorizontalAlignment="Left" Height="100" Margin="74,124,0,0" VerticalAlignment="Top" Width="320">
-            <TextBox Margin="112,25,0,0" x:Name="textBox1" TextAlignment="Center" BorderBrush="White" TabIndex="0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Background="#00000000" Foreground="White" FontFamily="Consolas" />
+            <TextBox Margin="112,35,0,0" x:Name="textBox1" TextAlignment="Center" BorderBrush="White" TabIndex="0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Background="#00000000" Foreground="White" FontFamily="Consolas" />
             <Button Content="Load grid" Margin="176,16,0,0" x:Name="button1" Click="button1_Click" FontFamily="Consolas" Cursor="Arrow" Foreground="White" BorderBrush="White" Background="#00DDDDDD" TabIndex="2" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="126" FontWeight="Bold" />
-            <TextBox Margin="112,50,0,0" x:Name="textBox2" TextAlignment="Center" BorderBrush="White" TabIndex="1" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Foreground="White" Background="#00000000" FontFamily="Consolas" />
-            <Label Content="Rows" Height="28" HorizontalAlignment="Left" Margin="52,23,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
-            <Label Content="Columns" Height="28" HorizontalAlignment="Left" Margin="52,46,0,0" x:Name="label3" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
+            <Label Content="Radius" Height="28" HorizontalAlignment="Left" Margin="52,33,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
             <Button Content="Load simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="176,50,0,0" x:Name="loadSimualtion" VerticalAlignment="Top" Width="126" Click="loadSimualtion_Click" Background="#00DDDDDD" BorderBrush="White" TabIndex="3" Foreground="White" FontWeight="Bold" />
             <Label Visibility="hidden" Content="Wrong inputs!" FontFamily="Consolas" Margin="58,-9,0,0" x:Name="label5" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Left" Width="96" />
         </Grid>

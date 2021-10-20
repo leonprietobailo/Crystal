@@ -199,7 +199,7 @@ namespace GameOfLife
             }
         }
 
-        public void loadGrid()
+        public int loadGrid()
         {
             var n = 0;
             var s = 0;
@@ -248,6 +248,11 @@ namespace GameOfLife
                 i = rows;
                 j = columns;
                 array = loadedGrid.array;
+                return 0;
+            }
+            else
+            {
+                return -1;
             }
         }
 

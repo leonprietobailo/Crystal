@@ -16,10 +16,10 @@ namespace GameOfLife
     public partial class MainWindow : Window
     {
 
-        int nRows, nColumns, rowinside, columninside;
+        int radius, rowinside, columninside;
         Rectangle[,] rectangles1, rectangles2;
         Stack<Grid> history = new Stack<Grid>();
-        Grid mesh, copy1;
+        Grid mesh, copy1, copy2;
         DispatcherTimer timer = new DispatcherTimer();
         bool timerStatus, inside;
         long ticks;
@@ -68,22 +68,21 @@ namespace GameOfLife
             {
                 if (Convert.ToInt32(textBox1.Text) > 1 && Convert.ToInt32(textBox1.Text) > 1)
                 {
-                    nRows = Convert.ToInt32(textBox1.Text);
-                    nColumns = Convert.ToInt32(textBox2.Text);
-                    mesh = new Grid(nRows, nColumns);
-                    rectangles1 = new Rectangle[nRows, nColumns];
-                    rectangles2 = new Rectangle[nRows, nColumns];
+                    radius = Convert.ToInt32(textBox1.Text) * 2 + 1;
+                    mesh = new Grid(radius, radius);
+                    rectangles1 = new Rectangle[radius, radius];
+                    rectangles2 = new Rectangle[radius, radius];
                     canvas1.Children.Clear();
                     canvas2.Children.Clear();
 
-                    for (int i = 0; i < nRows; i++)
+                    for (int i = 0; i < radius; i++)
                     {
-                        for (int j = 0; j < nColumns; j++)
+                        for (int j = 0; j < radius; j++)
                         {
                             // CANVAS 1
                             Rectangle rectangle1 = new Rectangle();
-                            rectangle1.Width = canvas1.Width / nColumns;
-                            rectangle1.Height = canvas1.Height / nRows;
+                            rectangle1.Width = canvas1.Width / radius;
+                            rectangle1.Height = canvas1.Height / radius;
                             rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
                             rectangle1.StrokeThickness = 0.1;
                             rectangle1.Stroke = Brushes.White;
@@ -99,8 +98,8 @@ namespace GameOfLife
 
                             // CANVAS 2
                             Rectangle rectangle2 = new Rectangle();
-                            rectangle2.Width = canvas2.Width / nColumns;
-                            rectangle2.Height = canvas2.Height / nRows;
+                            rectangle2.Width = canvas2.Width / radius;
+                            rectangle2.Height = canvas2.Height / radius;
                             rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
                             rectangle2.StrokeThickness = 0.1;
                             rectangle2.Stroke = Brushes.White;
@@ -118,7 +117,7 @@ namespace GameOfLife
                         }
                     }
 
-                    mesh.startCell((nRows - 1) / 2, (nColumns - 1) / 2);
+                    mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
                     updateMesh();
 
                     history.Clear();
@@ -163,8 +162,7 @@ namespace GameOfLife
             buttonStart.BorderBrush = Brushes.White;
             buttonStart.Foreground = Brushes.White;
             label5.Visibility = Visibility.Hidden;
-            textBox1.Text = Convert.ToString(mesh.getSize()[0]);
-            textBox2.Text = Convert.ToString(mesh.getSize()[1]);
+            textBox1.Text = Convert.ToString((mesh.getSize()[0] - 1) / 2);
             SimControls.Visibility = Visibility.Visible;
         }
 
@@ -192,7 +190,7 @@ namespace GameOfLife
 
         public void insideornot()
         {
-            if (inside==true)
+            if (inside == true)
             {
                 CellPhase.Content = Math.Round(mesh.getCellPhase(rowinside, columninside), 5);
                 CellTemperature.Content = Math.Round(mesh.getCellTemperature(rowinside, columninside), 5);
@@ -203,12 +201,12 @@ namespace GameOfLife
         // Reflejar visualmente los cambios.
         private void updateMesh()
         {
-            for (int i = 0; i < nRows; i++)
+            for (int i = 0; i < radius; i++)
             {
-                for (int j = 0; j < nColumns; j++)
+                for (int j = 0; j < radius; j++)
                 {
-                    double a = 255*Math.Pow(1.0-mesh.getCellPhase(i, j),1.0/4.0);
-                    double b = 255*Math.Sqrt(mesh.getCellTemperature(i, j) + 1);
+                    double a = 255 * Math.Pow(1.0 - mesh.getCellPhase(i, j), 1.0 / 4.0);
+                    double b = 255 * Math.Sqrt(mesh.getCellTemperature(i, j) + 1);
 
                     if (mesh.getCellTemperature(i, j) + 1 < 0)
                     {
@@ -228,7 +226,7 @@ namespace GameOfLife
                 buttonStart.Content = "Stop";
                 timer.Start();
                 timerStatus = true;
-                
+
             }
             else
             {
@@ -273,9 +271,12 @@ namespace GameOfLife
             history.Clear();
             timer.Stop();
             mesh.reset();
+            mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
             history.Push(mesh.deepCopy());
             PhaseValues.Clear();
             TemperatureValues.Clear();
+            PhaseValues.Add(mesh.getAveragePhase());
+            TemperatureValues.Add(mesh.getAverageTemperature());
             updateMesh();
             insideornot();
 
@@ -353,71 +354,78 @@ namespace GameOfLife
                 copy1 = mesh.deepCopy();
                 timer.Stop();
                 mesh.reset();
-                mesh.loadGrid();
+                int result = mesh.loadGrid();
 
-                if (mesh == null)
+                if (mesh == null || result == -1)
                 {
                     mesh = copy1.deepCopy();
                 }
-
-                int[] size = new int[2];
-                size = mesh.getSize();
-
-                nRows = size[0];
-                nColumns = size[1];
-
-                rectangles1 = new Rectangle[nRows, nColumns];
-                rectangles2 = new Rectangle[nRows, nColumns];
-                canvas1.Children.Clear();
-                canvas2.Children.Clear();
-
-                for (int i = 0; i < nRows; i++)
+                else
                 {
-                    for (int j = 0; j < nColumns; j++)
+                    int[] size = new int[2];
+                    size = mesh.getSize();
+
+                    radius = size[0];
+                    radius = size[1];
+
+                    rectangles1 = new Rectangle[radius, radius];
+                    rectangles2 = new Rectangle[radius, radius];
+                    canvas1.Children.Clear();
+                    canvas2.Children.Clear();
+
+                    for (int i = 0; i < radius; i++)
                     {
-                        // CANVAS 1
-                        Rectangle rectangle1 = new Rectangle();
-                        rectangle1.Width = canvas1.Width / nColumns;
-                        rectangle1.Height = canvas1.Height / nRows;
-                        rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                        rectangle1.StrokeThickness = 1;
-                        rectangle1.Stroke = Brushes.White;
-                        canvas1.Children.Add(rectangle1);
+                        for (int j = 0; j < radius; j++)
+                        {
+                            // CANVAS 1
+                            Rectangle rectangle1 = new Rectangle();
+                            rectangle1.Width = canvas1.Width / radius;
+                            rectangle1.Height = canvas1.Height / radius;
+                            rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
+                            rectangle1.StrokeThickness = 1;
+                            rectangle1.Stroke = Brushes.White;
+                            canvas1.Children.Add(rectangle1);
 
-                        Canvas.SetTop(rectangle1, i * rectangle1.Height);
-                        Canvas.SetLeft(rectangle1, j * rectangle1.Width);
+                            Canvas.SetTop(rectangle1, i * rectangle1.Height);
+                            Canvas.SetLeft(rectangle1, j * rectangle1.Width);
 
-                        rectangle1.Tag = new Point(i, j);
-                        rectangles1[i, j] = rectangle1;
+                            rectangle1.Tag = new Point(i, j);
+                            rectangles1[i, j] = rectangle1;
 
-                        // CANVAS 2
-                        Rectangle rectangle2 = new Rectangle();
-                        rectangle2.Width = canvas2.Width / nColumns;
-                        rectangle2.Height = canvas2.Height / nRows;
-                        rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                        rectangle2.StrokeThickness = 1;
-                        rectangle2.Stroke = Brushes.White;
-                        canvas2.Children.Add(rectangle2);
+                            // CANVAS 2
+                            Rectangle rectangle2 = new Rectangle();
+                            rectangle2.Width = canvas2.Width / radius;
+                            rectangle2.Height = canvas2.Height / radius;
+                            rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
+                            rectangle2.StrokeThickness = 1;
+                            rectangle2.Stroke = Brushes.White;
+                            canvas2.Children.Add(rectangle2);
 
-                        Canvas.SetTop(rectangle2, i * rectangle2.Height);
-                        Canvas.SetLeft(rectangle2, j * rectangle2.Width);
+                            Canvas.SetTop(rectangle2, i * rectangle2.Height);
+                            Canvas.SetLeft(rectangle2, j * rectangle2.Width);
 
-                        rectangle2.Tag = new Point(i, j);
-                        rectangles2[i, j] = rectangle2;
+                            rectangle2.Tag = new Point(i, j);
+                            rectangles2[i, j] = rectangle2;
 
 
+                        }
                     }
-                }
 
-                history.Clear();
-                history.Push(mesh.deepCopy());
-                comboBox2.SelectedIndex = 1;
-                updateMesh();
-                showElements1();
+                    history.Clear();
+                    history.Push(mesh.deepCopy());
+                    comboBox2.SelectedIndex = 1;
+                    updateMesh();
+                    showElements1();
+                }
             }
             catch (FileFormatException)
             {
                 label5.Visibility = Visibility.Visible;
+            }
+
+            catch (DirectoryNotFoundException)
+            {
+
             }
         }
 
