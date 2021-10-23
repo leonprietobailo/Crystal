@@ -31,7 +31,7 @@ namespace GameOfLife
             }
         }
 
-        //Conctructor del grid
+        //Constructor del grid
         public Grid(int iIn, int jIn)
         {
             i = iIn + 2;
@@ -84,7 +84,7 @@ namespace GameOfLife
         // Método que permite establecer los valores de fase y temperatura de las fronteras del grid
         public void setBoundaryLayer()
         {
-            //Valor de fronteras 
+            //Contorno reflector
             if (boundaries == 1)
             {
                 array[0, 0] = array[2, 2];
@@ -104,6 +104,7 @@ namespace GameOfLife
                     array[i - 1, s] = array[i - 3, s];
                 }
             }
+            //Contorno constante
             else
             {
                 for (int n = 0; n < i; n++)
@@ -120,8 +121,7 @@ namespace GameOfLife
             }
         }
 
-
-
+        //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados -> fase (1) temperatura (-1)
         public void reset()
         {
             for (int n = 1; n < i - 1; n++)
@@ -133,37 +133,38 @@ namespace GameOfLife
             }
         }
 
-
-        
-
+        //???
         public void startCell(int n, int s)
         {
             array[n + 1, s + 1] = new Cell(0,0);
         }
 
-        // RETOCAR
-        
-
+        //Método que realiza una copia del grid
         public Grid deepCopy()
         {
             Grid deepCopyGrid = new Grid(this);
             return deepCopyGrid;
         }
 
+        //Método que calcula el próximo valor de fase y temperatura de cada celda y lo guarda
         public void Iterate()
         {
+            //Se calcula el próximo valor de fase y temperatura de cada celda
             for (int n = 1; n < this.i - 1; n++)
             {
                 for (int s = 1; s < this.j - 1; s++)
                 {
+                    //Se establecen los vectores que contendrán los valores de fase y temperatura de las celdas vecinas
                     double[] uN = new double[4];
                     double[] pN = new double[4];
 
+                    //Se obtiene el valor de temperatura de cada celda vecina
                     uN[0] = array[n, s + 1].getTemperature();
                     uN[1] = array[n - 1, s].getTemperature();
                     uN[2] = array[n + 1, s].getTemperature();
                     uN[3] = array[n, s - 1].getTemperature();
 
+                    //Se obtiene el valor de fase de cada celda vecina
                     pN[0] = array[n, s + 1].getPhase();
                     pN[1] = array[n - 1, s].getPhase();
                     pN[2] = array[n + 1, s].getPhase();
@@ -173,6 +174,7 @@ namespace GameOfLife
                 }
             }
 
+            //Se guarda el próximo valor de fase y temperatura de cada celda
             for (int n = 1; n < this.i - 1; n++)
             {
                 for (int s = 1; s < this.j - 1; s++)
@@ -182,12 +184,12 @@ namespace GameOfLife
             }
         }
 
+        //Método que permite guardar el grid con todos los valores de fase y temperatura de cada celda en un archivo de texto
         public void saveGrid()
         {
             SaveFileDialog dig = new SaveFileDialog();
             dig.Filter = "(*.txt)|*.*";
             dig.DefaultExt = "txt";
-
 
             if (dig.ShowDialog() == true)
             {
@@ -213,6 +215,7 @@ namespace GameOfLife
             }
         }
 
+        //Método que permite cargar el grid con todos los valores de fase y temperatura de cada celda en un archivo de texto
         public int loadGrid()
         {
             var n = 0;
@@ -270,6 +273,7 @@ namespace GameOfLife
             }
         }
 
+        //Método que permite obtener el valor de la fase media de todas las celdas
         public double getAveragePhase()
         {
             int counter = 0;
@@ -286,6 +290,7 @@ namespace GameOfLife
             return totalPhase / counter;
         }
 
+        //Método que permite obtener el valor de la temperatura media de todas las celdas
         public double getAverageTemperature()
         {
             int counter = 0;
@@ -300,7 +305,6 @@ namespace GameOfLife
             }
 
             return totalTemperature / counter;
-
         }
     }
 }

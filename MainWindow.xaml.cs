@@ -12,21 +12,21 @@ using LiveCharts.Wpf;
 
 namespace GameOfLife
 {
-
     public partial class MainWindow : Window
     {
-
+        //Atributos del MainWindow
         int radius, rowinside, columninside;
-        Rectangle[,] rectangles1, rectangles2;
-        Stack<Grid> history = new Stack<Grid>();
-        Grid mesh, copy1, copy2;
-        DispatcherTimer timer = new DispatcherTimer();
         bool timerStatus, inside;
         long ticks;
+        Rectangle[,] rectangles1, rectangles2;
+        Stack<Grid> history = new Stack<Grid>();
+        Grid mesh, copy1;
+        DispatcherTimer timer = new DispatcherTimer();
         Rules r;
         ChartValues<double> PhaseValues = new ChartValues<double>();
         ChartValues<double> TemperatureValues = new ChartValues<double>();
 
+        //Constructor del MainWindow
         public MainWindow()
         {
             InitializeComponent();
@@ -38,11 +38,12 @@ namespace GameOfLife
             setChartNumbers();
         }
 
+        //???
         public SeriesCollection SeriesCollection { get; set; }
 
+        //???
         private void setChartNumbers()
         {
-
             SeriesCollection = new SeriesCollection
             {
                 new LineSeries
@@ -62,13 +63,14 @@ namespace GameOfLife
             Chart1.Series = SeriesCollection;
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+        //Evento que permite crear un grid con celdas con valor y fase predeterminados -> 
+        private void LoadGrid_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (Convert.ToInt32(textBox1.Text) > 1 && Convert.ToInt32(textBox1.Text) > 1)
+                if (Convert.ToInt32(Radius.Text) > 1)
                 {
-                    radius = Convert.ToInt32(textBox1.Text) * 2 + 1;
+                    radius = Convert.ToInt32(Radius.Text) * 2 + 1;
                     mesh = new Grid(radius, radius);
                     rectangles1 = new Rectangle[radius, radius];
                     rectangles2 = new Rectangle[radius, radius];
@@ -112,11 +114,8 @@ namespace GameOfLife
                             rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
                             rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles2[i, j] = rectangle2;
-
-
                         }
                     }
-
                     mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
                     updateMesh();
 
@@ -175,6 +174,7 @@ namespace GameOfLife
             }
         }
 
+        //Método que permite visualizar los parámetros de simulación y las condiciones de frontera
         private void showElements1()
         {
             if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
@@ -184,16 +184,18 @@ namespace GameOfLife
             }
         }
 
+        //Método que permite visualizar los botones que me permiten comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
         private void showElements2()
         {
             buttonStart.Background = Brushes.SpringGreen;
             buttonStart.BorderBrush = Brushes.White;
             buttonStart.Foreground = Brushes.White;
             label5.Visibility = Visibility.Hidden;
-            textBox1.Text = Convert.ToString((mesh.getSize()[0] - 1) / 2);
+            Radius.Text = Convert.ToString((mesh.getSize()[0] - 1) / 2);
             SimControls.Visibility = Visibility.Visible;
         }
 
+        //Evento que actualiza y muestra el valor de fase y temperatura de la celda sobre la que se encuentra el ratón el usuario
         private void rectangle_MouseEnter(object sender, MouseEventArgs e)
         {
             Rectangle reg = (Rectangle)sender;
@@ -210,12 +212,14 @@ namespace GameOfLife
             inside = true;
         }
 
+        //Evento que oculta el valor de fase y temperatura de la celda cuando el ratón del usuario no se encuentra encima del grid
         private void rectangle_MouseLeave(object sender, MouseEventArgs e)
         {
             Cellstatus.Visibility = Visibility.Hidden;
             inside = false;
         }
 
+        //Método que permite actualizar el valor de fase y temperatura de la celda sobre la que el usuario tiene el ratón cuando este si situa sobre ella y su valor cambia
         public void insideornot()
         {
             if (inside == true)
@@ -225,8 +229,7 @@ namespace GameOfLife
             }
         }
 
-
-        // Reflejar visualmente los cambios.
+        // Método que refleja visualmente los cambios
         private void updateMesh()
         {
             for (int i = 0; i < radius; i++)
@@ -247,6 +250,65 @@ namespace GameOfLife
             }
         }
 
+        //Evento que permite establecer los parámetros de simulación
+        private void LoadParameters(object sender, RoutedEventArgs e)
+        {
+            //Standard A
+            if (TabControl.SelectedIndex == 0)
+            {
+                r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
+                mesh.setRules(r);
+                Correctparameters.Content = "Standard A loaded!";
+                Correctparameters.Visibility = Visibility.Visible;
+                Wrongparameters.Visibility = Visibility.Hidden;
+                showElements2();
+
+            }
+            //Standard B
+            else if (TabControl.SelectedIndex == 1)
+            {
+                r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
+                mesh.setRules(r);
+                Correctparameters.Content = "Standard B loaded!";
+                Correctparameters.Visibility = Visibility.Visible;
+                Wrongparameters.Visibility = Visibility.Hidden;
+                showElements2();
+
+            }
+            //Custom
+            else if (TabControl.SelectedIndex == 2)
+            {
+                try
+                {
+                    r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
+                    mesh.setRules(r);
+                    Correctparameters.Content = "Custom loaded!";
+                    Wrongparameters.Visibility = Visibility.Hidden;
+                    Correctparameters.Visibility = Visibility.Visible;
+                    showElements2();
+                }
+                catch (FormatException)
+                {
+                    Wrongparameters.Visibility = Visibility.Visible;
+                    Correctparameters.Visibility = Visibility.Hidden;
+                }
+            }
+        }
+
+        //Evento que permite elegir la condición de las fronteras: contorno reflector o contorno de fase y temperatura constante
+        private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            mesh.setBoundaries(comboBox2.SelectedIndex);
+        }
+
+        //Evento que permite visualizar la imagen que contiene la explicación de los dos tipos de frontera que pueden establecerse
+        private void image2_Click(object sender, MouseButtonEventArgs e)
+        {
+            Window2 win2 = new Window2();
+            win2.ShowDialog();
+        }
+
+        //Evento que permite comenzar la simulación de forma automatica 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
             if (!timerStatus)
@@ -269,6 +331,18 @@ namespace GameOfLife
             }
         }
 
+        //Evento que permite activar el reloj para ejecutar la simulación automática
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            history.Push(mesh.deepCopy());
+            mesh.Iterate();
+            updateMesh();
+            PhaseValues.Add(mesh.getAveragePhase());
+            TemperatureValues.Add(mesh.getAverageTemperature());
+            insideornot();
+        }
+
+        //Evento que permite ejecutar la siguiente iteración de la simulación
         private void nextIteration_Click(object sender, RoutedEventArgs e)
         {
             history.Push(mesh.deepCopy());
@@ -279,6 +353,7 @@ namespace GameOfLife
             insideornot();
         }
 
+        //Evento que permite ejecutar la anterior iteración de la simulación
         private void previousIteration_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -294,6 +369,8 @@ namespace GameOfLife
             {
             }
         }
+
+        //Evento que permite volver a comenzar la simulación
         private void restart_Click(object sender, RoutedEventArgs e)
         {
             history.Clear();
@@ -310,16 +387,7 @@ namespace GameOfLife
 
         }
 
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            history.Push(mesh.deepCopy());
-            mesh.Iterate();
-            updateMesh();
-            PhaseValues.Add(mesh.getAveragePhase());
-            TemperatureValues.Add(mesh.getAverageTemperature());
-            insideornot();
-        }
-
+        //Evento que permite cambiar la velocidad de simulación
         private void speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var slider = sender as Slider;
@@ -328,53 +396,13 @@ namespace GameOfLife
             timer.Interval = new TimeSpan(ticks);
         }
 
+        //Evento que permite guardar la simulación
         private void saveSimulation_Click(object sender, RoutedEventArgs e)
         {
             mesh.saveGrid();
         }
 
-        private void LoadParameters(object sender, RoutedEventArgs e)
-        {
-            if (TabControl.SelectedIndex == 0)
-            {
-                r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
-                mesh.setRules(r);
-                Correctparameters.Content = "Standard one loaded!";
-                Correctparameters.Visibility = Visibility.Visible;
-                Wrongparameters.Visibility = Visibility.Hidden;
-                showElements2();
-
-            }
-            else if (TabControl.SelectedIndex == 1)
-            {
-                r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
-                mesh.setRules(r);
-                Correctparameters.Content = "Standard two loaded!";
-                Correctparameters.Visibility = Visibility.Visible;
-                Wrongparameters.Visibility = Visibility.Hidden;
-                showElements2();
-
-            }
-            else if (TabControl.SelectedIndex == 2)
-            {
-                try
-                {
-                    r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
-                    mesh.setRules(r);
-                    Correctparameters.Content = "Chosen values loaded!";
-                    Wrongparameters.Visibility = Visibility.Hidden;
-                    Correctparameters.Visibility = Visibility.Visible;
-                    showElements2();
-                }
-                catch (FormatException)
-                {
-                    Wrongparameters.Visibility = Visibility.Visible;
-                    Correctparameters.Visibility = Visibility.Hidden;
-                }
-            }
-
-        }
-
+        //Evento que permite cargar la simulación
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -455,17 +483,6 @@ namespace GameOfLife
             {
 
             }
-        }
-
-        private void comboBox2_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            mesh.setBoundaries(comboBox2.SelectedIndex);
-        }
-
-        private void image2_Click(object sender, MouseButtonEventArgs e)
-        {
-            Window2 win2 = new Window2();
-            win2.ShowDialog();
         }
     }
 }

@@ -12,8 +12,8 @@
                 <ColumnDefinition Width="97*"/>
                 <ColumnDefinition Width="63*"/>
             </Grid.ColumnDefinitions>
-            <TextBox Margin="112,35,0,0" x:Name="textBox1" TextAlignment="Center" BorderBrush="White" TabIndex="0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Background="#00000000" Foreground="White" FontFamily="Consolas" />
-            <Button Content="Load grid" Margin="176,16,0,0" x:Name="button1" Click="button1_Click" FontFamily="Consolas" Cursor="Arrow" Foreground="White" BorderBrush="White" Background="#00DDDDDD" TabIndex="2" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="126" FontWeight="Bold" Grid.ColumnSpan="2" />
+            <TextBox Margin="112,35,0,0" x:Name="Radius" TextAlignment="Center" BorderBrush="White" TabIndex="0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Background="#00000000" Foreground="White" FontFamily="Consolas" />
+            <Button Content="Load grid" Margin="176,16,0,0" x:Name="LoadGrid" Click="LoadGrid_Click" FontFamily="Consolas" Cursor="Arrow" Foreground="White" BorderBrush="White" Background="#00DDDDDD" TabIndex="2" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="126" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="Radius" Height="28" HorizontalAlignment="Left" Margin="52,33,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
             <Button Content="Load simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="176,50,0,0" x:Name="loadSimualtion" VerticalAlignment="Top" Width="126" Click="loadSimualtion_Click" Background="#00DDDDDD" BorderBrush="White" TabIndex="3" Foreground="White" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="WRONG INPUTS" FontFamily="Consolas" Margin="52,-16,41,91" x:Name="label5" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" />
@@ -29,7 +29,15 @@
         </Grid>
         <Grid Name="Settings" HorizontalAlignment="Left" Height="260" Margin="21,224,0,0" VerticalAlignment="Top" Width="477">
             <TabControl TabStripPlacement="Top" Name="TabControl" HorizontalAlignment="Left" Height="156" Margin="90,9,0,0" VerticalAlignment="Top" Width="267">
-                <TabItem Header="Standard one">
+                <TabItem Header="Standard A" Margin="-2,-2,-16,0" RenderTransformOrigin="0.5,0.5">
+                    <TabItem.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-0.145"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </TabItem.RenderTransform>
                     <Grid Background="Transparent">
                         <Label Content="ε&#x0a;&#x0a;β&#x0a;&#x0a;Δ&#x0a;&#x0a;M&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="48,10,0,0" VerticalAlignment="Top" Height="113" Width="22" FontFamily="Consolas"/>
                         <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas"/>
@@ -42,7 +50,7 @@
                         <TextBox Name="dt1" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,80,0,0" TextWrapping="Wrap" Text="5e-6" VerticalAlignment="Top" Width="41" FontFamily="Consolas" RenderTransformOrigin="0.459,0.941" IsEnabled="False"/>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Standard two">
+                <TabItem Header="Standard B" Margin="16,-2,-35,0">
                     <Grid Background="Transparent">
                         <Label Content="ε&#x0a;&#x0a;β&#x0a;&#x0a;Δ&#x0a;&#x0a;M&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="48,10,0,0" VerticalAlignment="Top" Height="113" Width="22" FontFamily="Consolas"/>
                         <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas"/>
@@ -55,7 +63,7 @@
                         <TextBox Name="dt2" TextAlignment="Center" HorizontalAlignment="Left" Height="17" Margin="153,80,0,0" TextWrapping="Wrap" Text="5e-6" VerticalAlignment="Top" Width="41" FontFamily="Consolas" RenderTransformOrigin="0.459,0.941" IsEnabled="False"/>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Chosen values" >
+                <TabItem Header="Custom" Margin="35,-2,-72,0" >
                     <Grid Background="Transparent" >
                         <Label Content="ε&#x0a;&#x0a;β&#x0a;&#x0a;Δ&#x0a;&#x0a;M&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="48,10,0,0" VerticalAlignment="Top" Height="113" Width="22" FontFamily="Consolas"/>
                         <Label Content="Δx&#x0a;&#x0a;Δy&#x0a;&#x0a;Δt&#x0a;&#x0a;" HorizontalAlignment="Left" Margin="125,20,0,0" VerticalAlignment="Top" Height="82" FontFamily="Consolas"/>

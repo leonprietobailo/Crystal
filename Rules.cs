@@ -8,9 +8,10 @@ namespace GameOfLife
     class Rules
     {
         
-        //?
+        //Atributo de las reglas
         double[] rules = new double[7];
 
+        //Constructor de las reglas
         public Rules(double mIn, double dtIn, double dIn, double eIn, double bIn, double dxIn, double dyIn)
         {
             rules[0] = mIn;
@@ -22,10 +23,12 @@ namespace GameOfLife
             rules[6] = dyIn;
         }
 
+        //Constructor de las reglas
         public Rules()
         {
         }
 
+        //Método que retorna en forma de vector las reglas
         public double[] getRules()
         {
             return rules;
