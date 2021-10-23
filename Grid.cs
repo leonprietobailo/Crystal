@@ -10,13 +10,12 @@ namespace GameOfLife
 {
     class Grid
     {
-        //ATRIBUTOS
-        int i, j;
+        //Atributos del grid
+        int i, j, boundaries;
         Cell[,] array;
-        int boundaries;
         Rules r;
 
-        //CONSTRUCTOR
+        //Constructor del grid
         public Grid(Grid grid)
         {
             i = grid.i;
@@ -32,6 +31,7 @@ namespace GameOfLife
             }
         }
 
+        //Conctructor del grid
         public Grid(int iIn, int jIn)
         {
             i = iIn + 2;
@@ -47,17 +47,7 @@ namespace GameOfLife
             r = new Rules();
         }
 
-        public void setRules(Rules rules)
-        {
-            r = rules;
-        }
-
-        public void setBoundaries(int b)
-        {
-            boundaries = b;
-            setBoundaryLayer();
-        }
-
+        //Método que permite conocer el tamaño del grid sin tener en cuenta las celdas de frontera
         public int[] getSize()
         {
             int[] size = new int[2];
@@ -65,36 +55,36 @@ namespace GameOfLife
             size[1] = j - 2;
             return size;
         }
-        public void reset()
-        {
-            for (int n = 1; n < i - 1; n++)
-            {
-                for (int s = 1; s < j - 1; s++)
-                {
-                    array[n, s] = new Cell(-1, 1);
-                }
-            }
-        }
 
-
-        public double getCellPhase(int n, int s)
-        {
-            return array[n + 1, s + 1].getPhase();
-        }
-
+        //Método que permite conocer la temperatura de una celda del grid
         public double getCellTemperature(int n, int s)
         {
             return array[n + 1, s + 1].getTemperature();
         }
 
-        public void startCell(int n, int s)
+        //Método que permite conocer la fase de una celda del grid
+        public double getCellPhase(int n, int s)
         {
-            array[n + 1, s + 1] = new Cell(0,0);
+            return array[n + 1, s + 1].getPhase();
+        }
+        
+        //?
+        public void setRules(Rules rules)
+        {
+            r = rules;
         }
 
-        // RETOCAR
+        //Método que permite establecer las fronteras del grid ?????
+        public void setBoundaries(int b)
+        {
+            boundaries = b;
+            setBoundaryLayer();
+        } 
+
+        // Método que permite establecer los valores de fase y temperatura de las fronteras del grid
         public void setBoundaryLayer()
         {
+            //Valor de fronteras 
             if (boundaries == 1)
             {
                 array[0, 0] = array[2, 2];
@@ -129,6 +119,30 @@ namespace GameOfLife
                 }
             }
         }
+
+
+
+        public void reset()
+        {
+            for (int n = 1; n < i - 1; n++)
+            {
+                for (int s = 1; s < j - 1; s++)
+                {
+                    array[n, s] = new Cell(-1, 1);
+                }
+            }
+        }
+
+
+        
+
+        public void startCell(int n, int s)
+        {
+            array[n + 1, s + 1] = new Cell(0,0);
+        }
+
+        // RETOCAR
+        
 
         public Grid deepCopy()
         {

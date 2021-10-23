@@ -7,7 +7,8 @@ namespace GameOfLife
 {
     class Rules
     {
-        // Hay que ver.
+        
+        //?
         double[] rules = new double[7];
 
         public Rules(double mIn, double dtIn, double dIn, double eIn, double bIn, double dxIn, double dyIn)
