@@ -121,14 +121,42 @@ namespace GameOfLife
                     updateMesh();
 
                     history.Clear();
+                    PhaseValues.Clear();
+                    TemperatureValues.Clear();
                     history.Push(mesh.deepCopy());
                     comboBox2.SelectedIndex = 0;
                     showElements1();
                     PhaseValues.Add(mesh.getAveragePhase());
                     TemperatureValues.Add(mesh.getAverageTemperature());
+
                     if (mesh.getSize()[0] == 0 || mesh.getSize()[1] == 0)
                     {
                         label5.Visibility = Visibility.Visible;
+                    }
+
+                    if (TabControl.SelectedIndex == 0)
+                    {
+                        r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
+                        mesh.setRules(r);
+
+                    }
+                    else if (TabControl.SelectedIndex == 1)
+                    {
+                        r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
+                        mesh.setRules(r);
+                    }
+                    else if (TabControl.SelectedIndex == 2)
+                    {
+                        try
+                        {
+                            r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
+                            mesh.setRules(r);
+                        }
+                        catch (FormatException)
+                        {
+                            Wrongparameters.Visibility = Visibility.Visible;
+                            Correctparameters.Visibility = Visibility.Hidden;
+                        }
                     }
 
                 }
@@ -317,7 +345,7 @@ namespace GameOfLife
                 showElements2();
 
             }
-            if (TabControl.SelectedIndex == 1)
+            else if (TabControl.SelectedIndex == 1)
             {
                 r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
                 mesh.setRules(r);
@@ -327,7 +355,7 @@ namespace GameOfLife
                 showElements2();
 
             }
-            if (TabControl.SelectedIndex == 2)
+            else if (TabControl.SelectedIndex == 2)
             {
                 try
                 {
