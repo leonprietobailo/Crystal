@@ -56,7 +56,7 @@ namespace GameOfLife
             try
             {
                 if (Convert.ToInt32(Radius.Text) > 0)
-                { 
+                {
                     radius = Convert.ToInt32(Radius.Text) * 2 + 1;
                     mesh = new Grid(radius);
                     //Creamos los objetos rectángulos para cada grid (fase y temperatura)
@@ -219,16 +219,31 @@ namespace GameOfLife
                 new LineSeries
                 {
                     Values = PhaseValues,
-                    ScalesYAt = 0
-                },
-                new LineSeries
-                {
-                    Values = TemperatureValues,
-                    ScalesYAt = 1
+                    ScalesYAt = 0,
+                    Stroke = new SolidColorBrush(Color.FromRgb(75, 75, 255)),
+                    Fill = Brushes.Transparent,
+                    Title = "Avg.Phase"
                 }
             };
             Chart1.Series = SeriesCollection;
-        } 
+
+            SeriesCollection = new SeriesCollection
+
+            {
+                new LineSeries
+                {
+                Values = TemperatureValues,
+                ScalesYAt = 0,
+                Stroke = new SolidColorBrush(Color.FromRgb(255, 75, 75)),
+                Fill = Brushes.Transparent,
+                Title = "Avg.Temperature"
+                }
+            };
+            
+            Chart1_Copy.Series = SeriesCollection;
+            
+            
+        }
 
         //Método que permite visualizar los parámetros de simulación y las condiciones de frontera
         private void showElements1()
@@ -314,7 +329,7 @@ namespace GameOfLife
         {
             var slider = sender as Slider;
             //Cálculo del tiempo entre iteraciones establecido con la barra deslizadora
-            double time = -9.0 / 1000.0 * (slider.Value * 10.0 - 1000.0 / 9.0); //[s]
+            double time = -3.0 / 400.0 * (slider.Value * 10.0 - 400.0 / 3.0); //[s]
             //Cálculo del número de ticks que se deben realizar en un tiempo de 100e-9 s
             ticks = Convert.ToInt64(time / 100e-9);
             //Se establce el intervalo de tiempo entre iteraciones??
