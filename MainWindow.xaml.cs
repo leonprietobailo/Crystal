@@ -34,12 +34,19 @@ namespace GameOfLife
             comboBox2.Items.Add("Reflective contour");
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
-            mesh = new Grid(0); // ???
+            mesh = new Grid(0);
             setChartNumbers();
+
+            // Visibilidad
+            label5.Visibility = Visibility.Hidden;
+            Settings.Visibility = Visibility.Hidden;
+            SimControls.Visibility = Visibility.Hidden;
+            GridandGraphs.Visibility = Visibility.Hidden;
+            Wrongparameters.Visibility = Visibility.Hidden;
         }
 
         //???
-        public SeriesCollection SeriesCollection { get; set; }
+        public SeriesCollection SeriesCollection;
 
         //???
         private void setChartNumbers()
@@ -68,7 +75,7 @@ namespace GameOfLife
         {
             try
             {
-                if (Convert.ToInt32(Radius.Text) > 1)
+                if (Convert.ToInt32(Radius.Text) > 0)
                 {
                     radius = Convert.ToInt32(Radius.Text) * 2 + 1;
                     mesh = new Grid(radius);
@@ -129,6 +136,7 @@ namespace GameOfLife
                     Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
                     PhaseValues.Add(averageTempPhase.Item2);
                     TemperatureValues.Add(averageTempPhase.Item1);
+                    label5.Visibility = Visibility.Hidden;
 
                     if (mesh.getSize() == 0)
                     {
@@ -189,7 +197,7 @@ namespace GameOfLife
         //Método que permite visualizar los botones que me permiten comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
         private void showElements2()
         {
-            buttonStart.Background = Brushes.SpringGreen;
+            buttonStart.Background = Brushes.Green;
             buttonStart.BorderBrush = Brushes.White;
             buttonStart.Foreground = Brushes.White;
             label5.Visibility = Visibility.Hidden;
@@ -316,6 +324,9 @@ namespace GameOfLife
             if (!timerStatus)
             {
                 buttonStart.Content = "Stop";
+                buttonStart.Background = Brushes.Red;
+                buttonStart.BorderBrush = Brushes.White;
+                buttonStart.Foreground = Brushes.White;
                 timer.Start();
                 timerStatus = true;
 
@@ -323,7 +334,7 @@ namespace GameOfLife
             else
             {
                 buttonStart.Content = "Start";
-                buttonStart.Background = Brushes.SpringGreen;
+                buttonStart.Background = Brushes.Green;
                 buttonStart.BorderBrush = Brushes.White;
                 buttonStart.Foreground = Brushes.White;
                 timer.Stop();
@@ -420,6 +431,7 @@ namespace GameOfLife
                 if (mesh == null || result == -1)
                 {
                     mesh = copy1.deepCopy();
+                    label5.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -466,7 +478,8 @@ namespace GameOfLife
 
                             rectangle2.Tag = new Point(i, j);
                             rectangles2[i, j] = rectangle2;
-
+                            label5.Visibility = Visibility.Hidden;
+                            Radius.Text = Convert.ToString((mesh.getSize()-1)/2);
 
                         }
                     }

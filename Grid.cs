@@ -298,6 +298,11 @@ namespace GameOfLife
             {
                 return -1;
             }
+
+            catch (FormatException)
+            {
+                return -1;
+            }
         }
     }
 }
