@@ -16,7 +16,7 @@
             <Button Content="Load grid" Margin="176,16,0,0" x:Name="LoadGrid" Click="LoadGrid_Click" FontFamily="Consolas" Cursor="Arrow" Foreground="White" BorderBrush="White" Background="#00DDDDDD" TabIndex="2" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="126" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="Radius" Height="28" HorizontalAlignment="Left" Margin="52,33,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
             <Button Content="Load simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="176,50,0,0" x:Name="loadSimualtion" VerticalAlignment="Top" Width="126" Click="loadSimualtion_Click" Background="#00DDDDDD" BorderBrush="White" TabIndex="3" Foreground="White" FontWeight="Bold" Grid.ColumnSpan="2" />
-            <Label Content="WRONG INPUTS" FontFamily="Consolas" Margin="52,-16,41,91" x:Name="label5" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Center" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" />
+            <Label Content="WRONG INPUTS" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WIRadius" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" />
         </Grid>
         <Grid Name="SimControls" HorizontalAlignment="Left" Height="191" Margin="21,471,0,0" VerticalAlignment="Top" Width="507">
             <Slider Height="23" HorizontalAlignment="Left" Margin="196,11,0,0" x:Name="speedSlider" VerticalAlignment="Top" Width="140" ValueChanged="speedSlider_ValueChanged" Foreground="Red" Background="#00000000" BorderBrush="Red" TabIndex="6" />
@@ -77,9 +77,12 @@
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="51,221,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
-            <ComboBox Height="23" HorizontalAlignment="Left" Margin="132,221,0,0" x:Name="comboBox2" VerticalAlignment="Top" Width="226" SelectionChanged="comboBox2_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White" />
-            <Image Height="23" HorizontalAlignment="Left" Margin="372,219,0,0" x:Name="image2" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="image2_Click" VerticalAlignment="Top"/>
+            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="92,221,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
+            <ComboBox Height="23" HorizontalAlignment="Left" Margin="173,221,0,0" x:Name="ContourSelection" VerticalAlignment="Top" Width="147" SelectionChanged="ContourSelection_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White">
+                <ComboBoxItem Content="Constant contour"></ComboBoxItem>
+                <ComboBoxItem Content="Reflective contour"></ComboBoxItem>
+            </ComboBox>
+            <Image Height="23" HorizontalAlignment="Left" Margin="327,221,0,0" x:Name="ContourInfo" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="ContourInfo_Click" VerticalAlignment="Top"/>
             <Button Name="Loadparameters" Content="Load parameters" HorizontalAlignment="Left" Margin="90,180,0,0" VerticalAlignment="Top" Width="118" Height="27" FontFamily="Consolas" Background="#00000000" BorderBrush="White" Foreground="White" FontWeight="Bold" Click="LoadParameters"/>
             <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="WRONG INPUTS" FontFamily="Consolas" Margin="208,180,0,0" x:Name="Wrongparameters" Foreground="Red" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="140" />
             <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Consolas" Margin="208,180,0,0" x:Name="Correctparameters" Foreground="Green" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" />

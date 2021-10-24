@@ -3,10 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Boundaries" Height="640" Width="1135" Icon="Images/SnowFlake.png" Foreground="#FF232323" Background="#FF232323" ResizeMode="NoResize">
     <Grid Background="#FF232323" Width="1040" Height="526">
-        <TextBlock Height="23" HorizontalAlignment="Left" Margin="208,20,0,0" Name="textBlock1" Text="Constant boundaries" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" />
-        <TextBlock FontFamily="Consolas" Foreground="White" Height="23" HorizontalAlignment="Left" Margin="698,20,0,0" Name="textBlock2" Text="Reflective boundaries" VerticalAlignment="Top" FontWeight="Bold" />
-        <TextBlock Height="28"  Margin="55,488,556,0" Name="textBlock3" Text="All the boundary cells have constant phase and temperature values" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" TextWrapping="Wrap" TextAlignment="center" FontWeight="Bold" />
-        <TextBlock FontFamily="Consolas" Foreground="White" Height="61" Margin="555,488,60,0" Name="textBlock4" Text="All the boundary cells have the same state as their reflective cells" VerticalAlignment="Top" TextAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" />
+        <TextBlock Height="23" HorizontalAlignment="Left" Margin="208,20,0,0" Name="textBlock1" Text="Constant contour" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" />
+        <TextBlock FontFamily="Consolas" Foreground="White" Height="23" HorizontalAlignment="Left" Margin="698,20,0,0" Name="textBlock2" Text="Reflective contour" VerticalAlignment="Top" FontWeight="Bold" />
+        <TextBlock Height="28"  Margin="55,488,556,0" Name="textBlock3" Text="All contour cells have constant phase and temperature values" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" TextWrapping="Wrap" TextAlignment="center" FontWeight="Bold" />
+        <TextBlock FontFamily="Consolas" Foreground="White" Height="28" Margin="555,488,60,0" Name="textBlock4" Text="All the contour cells have the same state as their reflective" VerticalAlignment="Top" TextAlignment="Center" TextWrapping="Wrap" FontWeight="Bold" />
         <Image Height="434" HorizontalAlignment="Left" Margin="55,45,0,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="434" Source="Images/ConstantPha&amp;Tem.png"/>
         <Image Height="424" HorizontalAlignment="Left" Margin="555,49,0,0" Name="image2" Stretch="Fill" VerticalAlignment="Top" Width="425" Source="/GameOfLife;component/Images/ReflectiveBoundaries.png" />
     </Grid>

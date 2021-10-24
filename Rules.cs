@@ -7,8 +7,7 @@ namespace GameOfLife
 {
     class Rules
     {
-        
-        //Atributo de las reglas
+        //Atributo de las reglas que contendrá los parámetros de simulación en un vector
         double[] rules = new double[7];
 
         //Constructor de las reglas

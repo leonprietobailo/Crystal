@@ -45,13 +45,13 @@ namespace GameOfLife
             r = new Rules();
         }
 
-        //Método que cambia el valor de fase y temperatura de la célula central del grid: valor fase (0)/ valor temperatura (0)
+        //Método que cambia el valor de fase y temperatura de la célula central del grid: valor fase (0) / valor temperatura (0)
         public void startCell(int n, int s)
         {
             array[n + 1, s + 1] = new Cell(0, 0);
         }
 
-        //Método que retorna el tamaño del grid sin tener en cuenta las celdas de frontera
+        //Método que retorna el tamaño del grid visible (sin contorno)
         public int getSize()
         {
             int size = i - 2;
@@ -69,7 +69,27 @@ namespace GameOfLife
         {
             return array[n + 1, s + 1].getPhase();
         }
-        
+
+        //Método que retorna el valor de la temperatura y fase media de todas las células del grid
+        public Tuple<double, double> getAverageTemperaturePhase()
+        {
+            int counter = 0;
+            double totalTemperature = 0;
+            double totalPhase = 0;
+
+            //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
+            for (int n = 1; n < this.i - 1; n++)
+            {
+                for (int s = 1; s < this.i - 1; s++)
+                {
+                    totalTemperature += array[n, s].getTemperature();
+                    totalPhase += array[n, s].getPhase();
+                    counter++;
+                }
+            }
+            return Tuple.Create(totalTemperature / counter, totalPhase / counter);
+        }
+
         //Método que permite establecer las reglas
         public void setRules(Rules rules)
         {
@@ -81,7 +101,7 @@ namespace GameOfLife
         {
             boundaries = b;
             setBoundaryLayer();
-        } 
+        }
 
         // Método que establece los valores de fase y temperatura de las fronteras del grid
         public void setBoundaryLayer()
@@ -96,7 +116,6 @@ namespace GameOfLife
                 array[i - 1, i - 1] = array[i - 3, i - 3];
 
                 //Se establecen el resto de valores de las fronteras
-
                 for (int n = 1; n < i - 1; n++)
                 {
                     array[n, 0] = array[n, 2];
@@ -118,26 +137,7 @@ namespace GameOfLife
             }
         }
 
-        //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados: valor fase (1) / valor temperatura (-1)
-        public void reset()
-        {
-            for (int n = 1; n < i - 1; n++)
-            {
-                for (int s = 1; s < i - 1; s++)
-                {
-                    array[n, s] = new Cell(-1, 1);
-                }
-            }
-        }
-
-        //Método que realiza una copia del grid
-        public Grid deepCopy()
-        {
-            Grid deepCopyGrid = new Grid(this);
-            return deepCopyGrid;
-        }
-
-        //Método que calcula el próximo valor de fase y temperatura de cada celda y lo guarda
+        //Método que permite realizar una iteración calculando el próximo estado de la celda y actualizándolo como estado actual
         public void Iterate()
         {
             //Se calcula el próximo valor de fase y temperatura de cada celda
@@ -175,24 +175,25 @@ namespace GameOfLife
             }
         }
 
-        //Método que retorna el valor de la temperatura y fase media de todas las células del grid
-        public Tuple<double, double> getAverageTemperaturePhase()
+        //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados: valor fase (1) / valor temperatura (-1)
+        //En la celda central del grid se asocian: valor fase (0) / valor temperatura (0)
+        public void reset() 
         {
-            int counter = 0;
-            double totalTemperature = 0;
-            double totalPhase = 0;
-
-            //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
-            for (int n = 1; n < this.i - 1; n++)
+            for (int n = 1; n < i - 1; n++)
             {
-                for (int s = 1; s < this.i - 1; s++)
+                for (int s = 1; s < i - 1; s++)
                 {
-                    totalTemperature += array[n, s].getTemperature();
-                    totalPhase += array[n, s].getPhase();
-                    counter++;
+                    array[n, s] = new Cell(-1, 1);
+                    startCell(i / 2 , i / 2);
                 }
             }
-            return Tuple.Create(totalTemperature / counter, totalPhase / counter);
+        }
+
+        //Método que realiza una copia del grid
+        public Grid deepCopy()
+        {
+            Grid deepCopyGrid = new Grid(this);
+            return deepCopyGrid;
         }
 
         //Método que permite guardar el grid con todos los valores de fase y temperatura de cada celda en un archivo de texto
