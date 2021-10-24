@@ -34,7 +34,7 @@ namespace GameOfLife
             comboBox2.Items.Add("Reflective contour");
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9));
-            mesh = new Grid(0, 0);
+            mesh = new Grid(0); // ???
             setChartNumbers();
         }
 
@@ -63,7 +63,7 @@ namespace GameOfLife
             Chart1.Series = SeriesCollection;
         }
 
-        //Evento que permite crear un grid con celdas con valor y fase predeterminados -> 
+        //Evento que permite crear un grid con celdas con valor y fase predeterminados
         private void LoadGrid_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -71,7 +71,7 @@ namespace GameOfLife
                 if (Convert.ToInt32(Radius.Text) > 1)
                 {
                     radius = Convert.ToInt32(Radius.Text) * 2 + 1;
-                    mesh = new Grid(radius, radius);
+                    mesh = new Grid(radius);
                     rectangles1 = new Rectangle[radius, radius];
                     rectangles2 = new Rectangle[radius, radius];
                     canvas1.Children.Clear();
@@ -125,10 +125,12 @@ namespace GameOfLife
                     history.Push(mesh.deepCopy());
                     comboBox2.SelectedIndex = 0;
                     showElements1();
-                    PhaseValues.Add(mesh.getAveragePhase());
-                    TemperatureValues.Add(mesh.getAverageTemperature());
 
-                    if (mesh.getSize()[0] == 0 || mesh.getSize()[1] == 0)
+                    Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+                    PhaseValues.Add(averageTempPhase.Item2);
+                    TemperatureValues.Add(averageTempPhase.Item1);
+
+                    if (mesh.getSize() == 0)
                     {
                         label5.Visibility = Visibility.Visible;
                     }
@@ -177,7 +179,7 @@ namespace GameOfLife
         //Método que permite visualizar los parámetros de simulación y las condiciones de frontera
         private void showElements1()
         {
-            if (mesh.getSize()[0] != 0 && mesh.getSize()[1] != 0)
+            if (mesh.getSize()!= 0)
             {
                 Settings.Visibility = Visibility.Visible;
                 GridandGraphs.Visibility = Visibility.Visible;
@@ -191,7 +193,7 @@ namespace GameOfLife
             buttonStart.BorderBrush = Brushes.White;
             buttonStart.Foreground = Brushes.White;
             label5.Visibility = Visibility.Hidden;
-            Radius.Text = Convert.ToString((mesh.getSize()[0] - 1) / 2);
+            Radius.Text = Convert.ToString((mesh.getSize() - 1) / 2);
             SimControls.Visibility = Visibility.Visible;
         }
 
@@ -326,8 +328,6 @@ namespace GameOfLife
                 buttonStart.Foreground = Brushes.White;
                 timer.Stop();
                 timerStatus = false;
-
-
             }
         }
 
@@ -337,8 +337,11 @@ namespace GameOfLife
             history.Push(mesh.deepCopy());
             mesh.Iterate();
             updateMesh();
-            PhaseValues.Add(mesh.getAveragePhase());
-            TemperatureValues.Add(mesh.getAverageTemperature());
+
+            Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+            PhaseValues.Add(averageTempPhase.Item2);
+            TemperatureValues.Add(averageTempPhase.Item1);
+            
             insideornot();
         }
 
@@ -347,8 +350,11 @@ namespace GameOfLife
         {
             history.Push(mesh.deepCopy());
             mesh.Iterate();
-            PhaseValues.Add(mesh.getAveragePhase());
-            TemperatureValues.Add(mesh.getAverageTemperature());
+
+            Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+            PhaseValues.Add(averageTempPhase.Item2);
+            TemperatureValues.Add(averageTempPhase.Item1);
+            
             updateMesh();
             insideornot();
         }
@@ -380,11 +386,10 @@ namespace GameOfLife
             history.Push(mesh.deepCopy());
             PhaseValues.Clear();
             TemperatureValues.Clear();
-            PhaseValues.Add(mesh.getAveragePhase());
-            TemperatureValues.Add(mesh.getAverageTemperature());
+            PhaseValues.Add(mesh.getAverageTemperaturePhase().Item2);
+            TemperatureValues.Add(mesh.getAverageTemperaturePhase().Item1);
             updateMesh();
             insideornot();
-
         }
 
         //Evento que permite cambiar la velocidad de simulación
@@ -418,11 +423,10 @@ namespace GameOfLife
                 }
                 else
                 {
-                    int[] size = new int[2];
+                    int size = new int();
                     size = mesh.getSize();
 
-                    radius = size[0];
-                    radius = size[1];
+                    radius = size;
 
                     rectangles1 = new Rectangle[radius, radius];
                     rectangles2 = new Rectangle[radius, radius];
@@ -438,7 +442,7 @@ namespace GameOfLife
                             rectangle1.Width = canvas1.Width / radius;
                             rectangle1.Height = canvas1.Height / radius;
                             rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle1.StrokeThickness = 1;
+                            rectangle1.StrokeThickness = 0.1;
                             rectangle1.Stroke = Brushes.White;
                             canvas1.Children.Add(rectangle1);
 
@@ -453,7 +457,7 @@ namespace GameOfLife
                             rectangle2.Width = canvas2.Width / radius;
                             rectangle2.Height = canvas2.Height / radius;
                             rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle2.StrokeThickness = 1;
+                            rectangle2.StrokeThickness = 0.1;
                             rectangle2.Stroke = Brushes.White;
                             canvas2.Children.Add(rectangle2);
 

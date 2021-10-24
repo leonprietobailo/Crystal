@@ -11,7 +11,7 @@ namespace GameOfLife
     class Grid
     {
         //Atributos del grid
-        int i, j, boundaries;
+        int i, boundaries;
         Cell[,] array;
         Rules r;
 
@@ -19,12 +19,11 @@ namespace GameOfLife
         public Grid(Grid grid)
         {
             i = grid.i;
-            j = grid.j;
             r = grid.r;
-            array = new Cell[i, j];
+            array = new Cell[i, i];
             for (int n = 0; n < i; n++)
             {
-                for (int s = 0; s < j; s++)
+                for (int s = 0; s < i; s++)
                 {
                     array[n, s] = new Cell(grid.array[n, s].getTemperature(), grid.array[n, s].getPhase());
                 }
@@ -32,14 +31,13 @@ namespace GameOfLife
         }
 
         //Constructor del grid
-        public Grid(int iIn, int jIn)
+        public Grid(int iIn)
         {
             i = iIn + 2;
-            j = jIn + 2;
-            array = new Cell[this.i, this.j];
+            array = new Cell[this.i, this.i];
             for (int n = 0; n < this.i; n++)
             {
-                for (int s = 0; s < this.j; s++)
+                for (int s = 0; s < this.i; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
                 }
@@ -47,61 +45,64 @@ namespace GameOfLife
             r = new Rules();
         }
 
-        //Método que permite conocer el tamaño del grid sin tener en cuenta las celdas de frontera
-        public int[] getSize()
+        //Método que cambia el valor de fase y temperatura de la célula central del grid: valor fase (0)/ valor temperatura (0)
+        public void startCell(int n, int s)
         {
-            int[] size = new int[2];
-            size[0] = i - 2;
-            size[1] = j - 2;
+            array[n + 1, s + 1] = new Cell(0, 0);
+        }
+
+        //Método que retorna el tamaño del grid sin tener en cuenta las celdas de frontera
+        public int getSize()
+        {
+            int size = i - 2;
             return size;
         }
 
-        //Método que permite conocer la temperatura de una celda del grid
+        //Método que retorna la temperatura de una celda del grid
         public double getCellTemperature(int n, int s)
         {
             return array[n + 1, s + 1].getTemperature();
         }
 
-        //Método que permite conocer la fase de una celda del grid
+        //Método que retorna la fase de una celda del grid
         public double getCellPhase(int n, int s)
         {
             return array[n + 1, s + 1].getPhase();
         }
         
-        //?
+        //Método que permite establecer las reglas
         public void setRules(Rules rules)
         {
             r = rules;
         }
 
-        //Método que permite establecer las fronteras del grid ?????
+        //Método que establece las fronteras del grid: contorno reflector o constante
         public void setBoundaries(int b)
         {
             boundaries = b;
             setBoundaryLayer();
         } 
 
-        // Método que permite establecer los valores de fase y temperatura de las fronteras del grid
+        // Método que establece los valores de fase y temperatura de las fronteras del grid
         public void setBoundaryLayer()
         {
             //Contorno reflector
             if (boundaries == 1)
             {
+                //Se establecen los valores de las esquinas de las fronteras
                 array[0, 0] = array[2, 2];
-                array[0, j - 1] = array[2, j - 3];
+                array[0, i - 1] = array[2, i - 3];
                 array[i - 1, 0] = array[i - 3, 2];
-                array[i - 1, j - 1] = array[i - 3, j - 3];
+                array[i - 1, i - 1] = array[i - 3, i - 3];
+
+                //Se establecen el resto de valores de las fronteras
 
                 for (int n = 1; n < i - 1; n++)
                 {
                     array[n, 0] = array[n, 2];
-                    array[n, j - 1] = array[n, j - 3];
-                }
-
-                for (int s = 1; s < i - 1; s++)
-                {
-                    array[0, s] = array[2, s];
-                    array[i - 1, s] = array[i - 3, s];
+                    array[n, i - 1] = array[n, i - 3];
+                    array[0, n] = array[2, n];
+                    array[i - 1, n] = array[i - 3, n];
                 }
             }
             //Contorno constante
@@ -110,33 +111,23 @@ namespace GameOfLife
                 for (int n = 0; n < i; n++)
                 {
                     array[n, 0] = new Cell(-1, 1);
-                    array[n, j - 1] = new Cell(-1, 1);
-                }
-
-                for (int s = 0; s < i; s++)
-                {
-                    array[0, s] = new Cell(-1, 1);
-                    array[i - 1, s] = new Cell(-1, 1);
+                    array[n, i - 1] = new Cell(-1, 1);
+                    array[0, n] = new Cell(-1, 1);
+                    array[i - 1, n] = new Cell(-1, 1);
                 }
             }
         }
 
-        //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados -> fase (1) temperatura (-1)
+        //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados: valor fase (1) / valor temperatura (-1)
         public void reset()
         {
             for (int n = 1; n < i - 1; n++)
             {
-                for (int s = 1; s < j - 1; s++)
+                for (int s = 1; s < i - 1; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
                 }
             }
-        }
-
-        //???
-        public void startCell(int n, int s)
-        {
-            array[n + 1, s + 1] = new Cell(0,0);
         }
 
         //Método que realiza una copia del grid
@@ -152,7 +143,7 @@ namespace GameOfLife
             //Se calcula el próximo valor de fase y temperatura de cada celda
             for (int n = 1; n < this.i - 1; n++)
             {
-                for (int s = 1; s < this.j - 1; s++)
+                for (int s = 1; s < this.i - 1; s++)
                 {
                     //Se establecen los vectores que contendrán los valores de fase y temperatura de las celdas vecinas
                     double[] uN = new double[4];
@@ -174,39 +165,70 @@ namespace GameOfLife
                 }
             }
 
-            //Se guarda el próximo valor de fase y temperatura de cada celda
+            //Se establece el próximo estado de fase y temperatura de cada celda anteriormente calculado como estado actual
             for (int n = 1; n < this.i - 1; n++)
             {
-                for (int s = 1; s < this.j - 1; s++)
+                for (int s = 1; s < this.i - 1; s++)
                 {
                     array[n, s].setNextStatus();
                 }
             }
         }
 
+        //Método que retorna el valor de la temperatura y fase media de todas las células del grid
+        public Tuple<double, double> getAverageTemperaturePhase()
+        {
+            int counter = 0;
+            double totalTemperature = 0;
+            double totalPhase = 0;
+
+            //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
+            for (int n = 1; n < this.i - 1; n++)
+            {
+                for (int s = 1; s < this.i - 1; s++)
+                {
+                    totalTemperature += array[n, s].getTemperature();
+                    totalPhase += array[n, s].getPhase();
+                    counter++;
+                }
+            }
+            return Tuple.Create(totalTemperature / counter, totalPhase / counter);
+        }
+
         //Método que permite guardar el grid con todos los valores de fase y temperatura de cada celda en un archivo de texto
         public void saveGrid()
         {
+            //Abre el explorador de archivos y permite guardar la simulación
             SaveFileDialog dig = new SaveFileDialog();
+            //Obtiene la cadena de filtro que determina qué tipos de archivos se muestran desde SaveFileDialog
             dig.Filter = "(*.txt)|*.*";
+            //Especifica la cadena de la extensión predeterminada que se va a usar para filtrar la lista de archivos que se muestran
             dig.DefaultExt = "txt";
 
+            //Si se ha seleccionado guardar la simulación
             if (dig.ShowDialog() == true)
             {
+                //Crea el archivo txt donde se guardará la simulación
                 FileStream emptyFile = File.Create(dig.FileName);
+                //Cierra el archivo
                 emptyFile.Close();
+
+                //Recorre el grid de la simulación que se quiere guardar
                 for (int n = 0; n < this.i; n++)
                 {
-                    for (int s = 0; s < this.j; s++)
+                    for (int s = 0; s < this.i; s++)
                     {
+                        //Escribe en el archivo los valores de temperatura y fase por "|"
                         File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getTemperature()));
                         File.AppendAllText(dig.FileName, "|");
                         File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getPhase()));
-                        if (s != j - 1)
+                        //Separa cada valor de celda con " "
+                        if (s != i - 1)
                         {
                             File.AppendAllText(dig.FileName, " ");
                         }
                     }
+                    //Hace un salto de linea cada vez que estamos en una fila diferente del grid
                     if (n != i - 1)
                     {
                         File.AppendAllText(dig.FileName, "\n");
@@ -215,96 +237,67 @@ namespace GameOfLife
             }
         }
 
-        //Método que permite cargar el grid con todos los valores de fase y temperatura de cada celda en un archivo de texto
+        //Método que permite cargar un archivo de texto con una simulación
         public int loadGrid()
         {
-            var n = 0;
-            var s = 0;
-            bool readColumns = false;
-
-            OpenFileDialog dig = new OpenFileDialog();
-            dig.Multiselect = false;
-            dig.Filter = "(*.txt*)|*.*";
-            dig.DefaultExt = ".txt";
-            if (dig.ShowDialog() == true)
+            try
             {
-                StreamReader countFile = new StreamReader(dig.FileName);
-                string strReadline = countFile.ReadLine();
-                while (strReadline != null)
-                {
-                    if (!readColumns)
-                    {
+                //Abre el explorador de archivos y permite especificar un nombre de archivo 
+                OpenFileDialog dig = new OpenFileDialog();
+                //Impide cargar varios archivos a la vez
+                dig.Multiselect = false;
+                //Obtiene la cadena de filtro que determina qué tipos de archivos se muestran desde OpenFileDialog
+                dig.Filter = "(*.txt*)|*.*";
+                //Especifica la cadena de la extensión predeterminada que se va a usar para filtrar la lista de archivos que se muestran
+                dig.DefaultExt = ".txt";
 
-                        s = strReadline.Split('|').Length - 1;
-                        readColumns = true;
-                    }
-                    n++;
-                    strReadline = countFile.ReadLine();
-                }
-                countFile.Close();
-
-                StreamReader readFile = new StreamReader(dig.FileName);
-                int rows = n;
-                int columns = s;
-                Grid loadedGrid = new Grid(rows, columns);
-                strReadline = readFile.ReadLine();
-                s = 0;
-                string[] temperaturePhase;
-                while (strReadline != null)
+                //Si se ha seleccionado el archivo
+                if (dig.ShowDialog() == true)
                 {
-                    string[] subs = strReadline.Split(' ');
-                    for (n = 0; n < subs.Length; n++)
+                    //Lee el archivo seleccionado
+                    StreamReader readFile = new StreamReader(dig.FileName);
+                    string strReadline = readFile.ReadLine();
+
+                    //Cuenta el número de columnas que tiene el archivo y actualiza el atributo "i" de la clase Grid
+                    i = strReadline.Split('|').Length - 1;
+
+                    //Carga un grid cuadrado de dimension igual al numero de columnas
+                    Grid loadedGrid = new Grid(i);
+
+                    //Recorre el grid creado y establece cada valor de fase y temperatura de cada celda con la información del archivo que estamos leyendo
+                    int s = 0;
+                    string[] temperaturePhase;
+                    while (strReadline != null)
                     {
-                        temperaturePhase = subs[n].Split('|');
-                        loadedGrid.array[s, n] = new Cell(Convert.ToDouble(temperaturePhase[0]), Convert.ToDouble(temperaturePhase[1]));
+                        //Se separa para obtener la información individual de cada celda
+                        string[] subs = strReadline.Split(' ');
+                        for (int n = 0; n < subs.Length; n++)
+                        {
+                            //Se separa para obtener el valor de fase y temperatura individualmente
+                            temperaturePhase = subs[n].Split('|');
+                            //Se asocian los valores del archivo leido a nuevas celdas
+                            loadedGrid.array[s, n] = new Cell(Convert.ToDouble(temperaturePhase[0]), Convert.ToDouble(temperaturePhase[1]));
+                        }
+                        strReadline = readFile.ReadLine();
+                        s++;
                     }
-                    strReadline = readFile.ReadLine();
-                    s++;
+
+                    //Cerramos el archivo que se estaba leyendo
+                    readFile.Close();
+
+                    //Actualizamos el valor del atributo "array" de la clase Grid
+                    array = loadedGrid.array;
+                    return 0;
                 }
-                readFile.Close();
-                i = rows;
-                j = columns;
-                array = loadedGrid.array;
-                return 0;
+                else 
+                {
+                    return -1;
+                }
             }
-            else
+            catch (FileFormatException)
             {
                 return -1;
             }
-        }
-
-        //Método que permite obtener el valor de la fase media de todas las celdas
-        public double getAveragePhase()
-        {
-            int counter = 0;
-            double totalPhase = 0;
-            for (int n = 1; n < this.i - 1; n++)
-            {
-                for (int s = 1; s < this.j - 1; s++)
-                {
-                    totalPhase += array[n, s].getPhase();
-                    counter++;
-                }
-            }
-
-            return totalPhase / counter;
-        }
-
-        //Método que permite obtener el valor de la temperatura media de todas las celdas
-        public double getAverageTemperature()
-        {
-            int counter = 0;
-            double totalTemperature = 0;
-            for (int n = 1; n < this.i - 1; n++)
-            {
-                for (int s = 1; s < this.j - 1; s++)
-                {
-                    totalTemperature += array[n, s].getTemperature();
-                    counter++;
-                }
-            }
-
-            return totalTemperature / counter;
         }
     }
 }
