@@ -184,7 +184,6 @@ namespace GameOfLife
                 for (int s = 1; s < i - 1; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
-                    startCell(i / 2 , i / 2);
                 }
             }
         }
@@ -295,11 +294,12 @@ namespace GameOfLife
                     return -1;
                 }
             }
+            //Caso en el que el formato del archivo que se quiere cargar no sea correcto
             catch (FileFormatException)
             {
                 return -1;
             }
-
+            //Caso en el que el contenido del archivo que se quiere cargar no sea correcto
             catch (FormatException)
             {
                 return -1;

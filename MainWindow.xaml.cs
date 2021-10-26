@@ -35,12 +35,11 @@ namespace GameOfLife
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             //Define el intervalo de tiempo entre cada iteración
             //timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9)); //Se puede eliminar???
-            //???
-            mesh = new Grid(0);
+            //mesh = new Grid(0); lo ponemos donde lo necesitamos que esen el load simulation???
             //Establecemos los valores del gráfico
             setChartNumbers();
             //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
-            ContourSelection.SelectedIndex = 0;
+            //ContourSelection.SelectedIndex = 0;??? 
 
             //Oculta parte del programa para mostrarlo parcialmente al inicializar
             WIRadius.Visibility = Visibility.Hidden;
@@ -111,6 +110,8 @@ namespace GameOfLife
                         }
                     }
 
+                    ContourSelection.SelectedIndex = 0;
+
                     //Se cambia el valor de fase y temperatura de la celda central
                     mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
 
@@ -122,7 +123,7 @@ namespace GameOfLife
                     PhaseValues.Clear();
                     TemperatureValues.Clear();
 
-                    //???
+                    //Se guarda el grid inicial en el historial
                     history.Push(mesh.deepCopy());
 
                     //Se visualiza un grupo de componentes del programa para poder establecer los diferentes parámetros de simulación
@@ -142,7 +143,7 @@ namespace GameOfLife
                         WIRadius.Visibility = Visibility.Visible;
                     }
 
-                    //Se establecen las reglas en función del conjunto de parámetros seleccionados ????????????????
+                    //Se establecen las reglas en función del conjunto de parámetros seleccionados ???????????????? pondria una label poniendo que nada ha sido cargado y quitaria todo este codigo o no???
                     //Standard A
                     if (TabControl.SelectedIndex == 0)
                     {
@@ -216,6 +217,7 @@ namespace GameOfLife
         {
             SeriesCollection = new SeriesCollection
             {
+                //Gráfica de fase
                 new LineSeries
                 {
                     Values = PhaseValues,
@@ -230,6 +232,7 @@ namespace GameOfLife
             SeriesCollection = new SeriesCollection
 
             {
+                //Gráfica de temperatura
                 new LineSeries
                 {
                 Values = TemperatureValues,
@@ -241,8 +244,6 @@ namespace GameOfLife
             };
             
             Chart1_Copy.Series = SeriesCollection;
-            
-            
         }
 
         //Método que permite visualizar los parámetros de simulación y las condiciones de frontera
@@ -300,7 +301,7 @@ namespace GameOfLife
             }
         }
 
-        //Método que permite visualizar los botones que me permiten comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
+        //Método que permite visualizar los botones para poder comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
         private void showElements2()
         {
             buttonStart.Background = Brushes.Green;
@@ -314,7 +315,7 @@ namespace GameOfLife
         //Evento que permite visualizar la imagen que contiene la explicación de los dos tipos de frontera que pueden establecerse
         private void ContourInfo_Click(object sender, MouseButtonEventArgs e)
         {
-            Window2 win2 = new Window2();
+            ContourInfo win2 = new ContourInfo();
             win2.ShowDialog();
         }
 
@@ -428,6 +429,7 @@ namespace GameOfLife
             timer.Stop();
             //Se resetear el grid
             mesh.reset();
+            mesh.startCell(mesh.getSize()/2, mesh.getSize()/2);
             history.Push(mesh.deepCopy());//?????????????
             //Se eliminan todos los valors de fase y temperaturas medias de la gráfica
             PhaseValues.Clear();
@@ -488,18 +490,20 @@ namespace GameOfLife
             try
             {
                 //Se copia el grid
-                copy1 = mesh.deepCopy();
+                //copy1 = mesh.deepCopy();??paara?
                 //Se para el reloj
                 timer.Stop();
+                mesh = new Grid(0);
                 //Se resetea el grid
-                mesh.reset();
+                //mesh.reset();//??para?
 
                 //Se obtiene el parámetro que indica si el archivo se ha cargado o no
                 int result = mesh.loadGrid();
                 //Si el archivo no se ha podido cargar
                 if (mesh == null || result == -1)
                 {
-                    mesh = copy1.deepCopy();
+                    mesh=mesh.deepCopy();
+                    //mesh = copy1.deepCopy();
                     WIRadius.Visibility = Visibility.Visible;
                 }
                 //Si el archivo se ha podido cargar
@@ -566,6 +570,7 @@ namespace GameOfLife
 
                     //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
                     ContourSelection.SelectedIndex = 0;
+
 
                     //Se actulizan los cambios visualmente
                     updateMesh();

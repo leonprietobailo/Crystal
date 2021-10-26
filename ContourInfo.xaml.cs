@@ -13,11 +13,13 @@ using System.Windows.Shapes;
 
 namespace GameOfLife
 {
-    public partial class Window2 : Window
+    public partial class ContourInfo : Window
     {
-        public Window2()
+        public ContourInfo()
         {
-            InitializeComponent();
+            //Permite visualizar el esquema de los dos contornos posibles
+            InitializedComponent();
+
         }
     }
 }
