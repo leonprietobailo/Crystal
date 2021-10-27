@@ -18,7 +18,7 @@ namespace GameOfLife
         public ContourInfo()
         {
             //Permite visualizar el esquema de los dos contornos posibles
-            InitializedComponent();
+            InitializeComponent();
 
         }
     }

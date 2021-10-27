@@ -34,8 +34,13 @@ namespace GameOfLife
             //Inicia el evento del reloj para poder realizar la simulación automática
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
             //Define el intervalo de tiempo entre cada iteración
+            //timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9)); //Se puede eliminar???
+            //mesh = new Grid(0); lo ponemos donde lo necesitamos que esen el load simulation???
             //Establecemos los valores del gráfico
             setChartNumbers();
+            //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
+            //ContourSelection.SelectedIndex = 0;??? 
+
             //Oculta parte del programa para mostrarlo parcialmente al inicializar
             WIRadius.Visibility = Visibility.Hidden;
             Settings.Visibility = Visibility.Hidden;
@@ -485,17 +490,20 @@ namespace GameOfLife
             try
             {
                 //Se copia el grid
-                copy1 = mesh.deepCopy();
+                //copy1 = mesh.deepCopy();??paara?
                 //Se para el reloj
                 timer.Stop();
                 mesh = new Grid(0);
+                //Se resetea el grid
+                //mesh.reset();//??para?
 
                 //Se obtiene el parámetro que indica si el archivo se ha cargado o no
                 int result = mesh.loadGrid();
                 //Si el archivo no se ha podido cargar
                 if (mesh == null || result == -1)
                 {
-                    mesh = copy1.deepCopy();
+                    mesh=mesh.deepCopy();
+                    //mesh = copy1.deepCopy();
                     WIRadius.Visibility = Visibility.Visible;
                 }
                 //Si el archivo se ha podido cargar
@@ -562,6 +570,7 @@ namespace GameOfLife
 
                     //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
                     ContourSelection.SelectedIndex = 0;
+
 
                     //Se actulizan los cambios visualmente
                     updateMesh();
