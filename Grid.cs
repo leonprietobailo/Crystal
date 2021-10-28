@@ -76,7 +76,6 @@ namespace GameOfLife
             int counter = 0;
             double totalTemperature = 0;
             double totalPhase = 0;
-
             //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
             for (int n = 1; n < this.i - 1; n++)
             {
@@ -164,7 +163,6 @@ namespace GameOfLife
                     array[n, s].getNextStatus(r, uN, pN);
                 }
             }
-
             //Se establece el próximo estado de fase y temperatura de cada celda anteriormente calculado como estado actual
             for (int n = 1; n < this.i - 1; n++)
             {

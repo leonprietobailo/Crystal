@@ -17,6 +17,7 @@
             <Label Content="Radius" Height="28" HorizontalAlignment="Left" Margin="52,33,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
             <Button Content="Load simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="176,50,0,0" x:Name="loadSimualtion" VerticalAlignment="Top" Width="126" Click="loadSimualtion_Click" Background="#00DDDDDD" BorderBrush="White" TabIndex="3" Foreground="White" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="WRONG INPUTS" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WIRadius" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" />
+            <Label Content="File not loaded" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WrongFile" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center"/>
         </Grid>
         <Grid Name="SimControls" HorizontalAlignment="Left" Height="191" Margin="11,471,0,0" VerticalAlignment="Top" Width="507">
             <Slider Height="23" HorizontalAlignment="Left" Margin="218,11,0,0" x:Name="speedSlider" VerticalAlignment="Top" Width="140" ValueChanged="speedSlider_ValueChanged" Foreground="Red" Background="#00000000" BorderBrush="Red" TabIndex="6" />

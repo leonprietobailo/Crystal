@@ -33,16 +33,12 @@ namespace GameOfLife
             InitializeComponent();
             //Inicia el evento del reloj para poder realizar la simulación automática
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
-            //Define el intervalo de tiempo entre cada iteración
-            //timer.Interval = new TimeSpan(Convert.ToInt64(1 / 100e-9)); //Se puede eliminar???
-            //mesh = new Grid(0); lo ponemos donde lo necesitamos que esen el load simulation???
             //Establecemos los valores del gráfico
             setChartNumbers();
-            //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
-            //ContourSelection.SelectedIndex = 0;??? 
 
             //Oculta parte del programa para mostrarlo parcialmente al inicializar
             WIRadius.Visibility = Visibility.Hidden;
+            WrongFile.Visibility = Visibility.Hidden;
             Settings.Visibility = Visibility.Hidden;
             SimControls.Visibility = Visibility.Hidden;
             GridandGraphs.Visibility = Visibility.Hidden;
@@ -136,6 +132,7 @@ namespace GameOfLife
 
                     //Se oculta la label de "WRONG INPUTS" cuando el radio es correcto
                     WIRadius.Visibility = Visibility.Hidden;
+                    WrongFile.Visibility = Visibility.Hidden;
 
                     //Si el radio es 0, aparece la label de "WRONG INPUTS"
                     if (mesh.getSize() == 0)
@@ -143,35 +140,7 @@ namespace GameOfLife
                         WIRadius.Visibility = Visibility.Visible;
                     }
 
-                    //Se establecen las reglas en función del conjunto de parámetros seleccionados ???????????????? pondria una label poniendo que nada ha sido cargado y quitaria todo este codigo o no???
-                    //Standard A
-                    if (TabControl.SelectedIndex == 0)
-                    {
-                        r = new Rules(Convert.ToDouble(m1.Text), Convert.ToDouble(dt1.Text), Convert.ToDouble(d1.Text), Convert.ToDouble(e1.Text), Convert.ToDouble(b1.Text), Convert.ToDouble(dx1.Text), Convert.ToDouble(dy1.Text));
-                        mesh.setRules(r);
-
-                    }
-                    //Standard B
-                    else if (TabControl.SelectedIndex == 1)
-                    {
-                        r = new Rules(Convert.ToDouble(m2.Text), Convert.ToDouble(dt2.Text), Convert.ToDouble(d2.Text), Convert.ToDouble(e2.Text), Convert.ToDouble(b2.Text), Convert.ToDouble(dx2.Text), Convert.ToDouble(dy2.Text));
-                        mesh.setRules(r);
-                    }
-                    //Custom
-                    else if (TabControl.SelectedIndex == 2)
-                    {
-                        try
-                        {
-                            r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
-                            mesh.setRules(r);
-                        }
-                        //Caso en el que los parámetros introducidos no sean validos
-                        catch (FormatException)
-                        {
-                            Wrongparameters.Visibility = Visibility.Visible;
-                            Correctparameters.Visibility = Visibility.Hidden;
-                        }
-                    }
+                    loadparameters();
                 }
                 else
                 {
@@ -259,6 +228,11 @@ namespace GameOfLife
         //Evento que permite establecer los parámetros de simulación
         private void LoadParameters(object sender, RoutedEventArgs e)
         {
+            loadparameters();
+        }
+
+        private void loadparameters() 
+        {
             //Standard A
             if (TabControl.SelectedIndex == 0)
             {
@@ -268,7 +242,6 @@ namespace GameOfLife
                 Correctparameters.Visibility = Visibility.Visible;
                 Wrongparameters.Visibility = Visibility.Hidden;
                 showElements2();
-
             }
             //Standard B
             else if (TabControl.SelectedIndex == 1)
@@ -300,6 +273,7 @@ namespace GameOfLife
                 }
             }
         }
+
 
         //Método que permite visualizar los botones para poder comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
         private void showElements2()
@@ -430,6 +404,7 @@ namespace GameOfLife
             //Se resetear el grid
             mesh.reset();
             mesh.startCell(mesh.getSize()/2, mesh.getSize()/2);
+            //Añadimos una copia del grid al historial
             history.Push(mesh.deepCopy());//?????????????
             //Se eliminan todos los valors de fase y temperaturas medias de la gráfica
             PhaseValues.Clear();
@@ -489,22 +464,19 @@ namespace GameOfLife
         {
             try
             {
+                mesh = new Grid(0);
                 //Se copia el grid
-                //copy1 = mesh.deepCopy();??paara?
+                copy1 = mesh.deepCopy();
                 //Se para el reloj
                 timer.Stop();
-                mesh = new Grid(0);
-                //Se resetea el grid
-                //mesh.reset();//??para?
-
                 //Se obtiene el parámetro que indica si el archivo se ha cargado o no
                 int result = mesh.loadGrid();
                 //Si el archivo no se ha podido cargar
                 if (mesh == null || result == -1)
                 {
                     mesh=mesh.deepCopy();
-                    //mesh = copy1.deepCopy();
-                    WIRadius.Visibility = Visibility.Visible;
+                    mesh = copy1.deepCopy();
+                    WrongFile.Visibility = Visibility.Visible;
                 }
                 //Si el archivo se ha podido cargar
                 else
@@ -539,6 +511,9 @@ namespace GameOfLife
                             Canvas.SetLeft(rectangle1, j * rectangle1.Width);
 
                             rectangle1.Tag = new Point(i, j);
+                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
+                            rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                            rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles1[i, j] = rectangle1;
 
 
@@ -557,9 +532,12 @@ namespace GameOfLife
                             Canvas.SetLeft(rectangle2, j * rectangle2.Width);
 
                             rectangle2.Tag = new Point(i, j);
+                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
+                            rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                            rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
                             rectangles2[i, j] = rectangle2;
 
-                            WIRadius.Visibility = Visibility.Hidden;
+                            WrongFile.Visibility = Visibility.Hidden;
                             Radius.Text = Convert.ToString((mesh.getSize()-1)/2);
                         }
                     }
@@ -577,12 +555,17 @@ namespace GameOfLife
 
                     //Se visualiza un grupo de componentes del programa para poder establecer los diferentes parámetros de simulación
                     showElements1();
+
+                    ////Se calcula la fase y temperatura medias de todo el grid
+                    Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+                    PhaseValues.Add(averageTempPhase.Item2);
+                    TemperatureValues.Add(averageTempPhase.Item1);
                 }
             }
             //Caso en el que el formato del archivo no sea correcto
             catch (FileFormatException)
             {
-                WIRadius.Visibility = Visibility.Visible;
+                WrongFile.Visibility = Visibility.Visible;
             }
             //Caso en el que no se haya podido encontrar el archivo
             catch (DirectoryNotFoundException)
