@@ -16,7 +16,7 @@ namespace GameOfLife
     {
         //Atributos del MainWindow
         int radius, rowinside, columninside;
-        bool timerStatus, inside;
+        bool timerStatus, inside, firstgrid;
         long ticks;
         Rectangle[,] rectangles1, rectangles2;
         Stack<Grid> history = new Stack<Grid>();
@@ -39,7 +39,6 @@ namespace GameOfLife
             //Oculta parte del programa para mostrarlo parcialmente al inicializar
             WIRadius.Visibility = Visibility.Hidden;
             WrongFile.Visibility = Visibility.Hidden;
-            Settings.Visibility = Visibility.Hidden;
             SimControls.Visibility = Visibility.Hidden;
             GridandGraphs.Visibility = Visibility.Hidden;
             Wrongparameters.Visibility = Visibility.Hidden;
@@ -60,79 +59,7 @@ namespace GameOfLife
                     canvas1.Children.Clear();
                     canvas2.Children.Clear();
 
-                    for (int i = 0; i < radius; i++)
-                    {
-                        for (int j = 0; j < radius; j++)
-                        {
-                            //Grid fase
-                            Rectangle rectangle1 = new Rectangle();
-                            //Características de los rectángulos del grid
-                            rectangle1.Width = canvas1.Width / radius;
-                            rectangle1.Height = canvas1.Height / radius;
-                            rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle1.StrokeThickness = 0.1;
-                            rectangle1.Stroke = Brushes.White;
-                            canvas1.Children.Add(rectangle1);
-
-                            //Posición del rectángulo dentro del grid
-                            Canvas.SetTop(rectangle1, i * rectangle1.Height);
-                            Canvas.SetLeft(rectangle1, j * rectangle1.Width);
-
-                            rectangle1.Tag = new Point(i, j);
-                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                            rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                            rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                            rectangles1[i, j] = rectangle1;
-
-                            //Grid temperatura
-                            Rectangle rectangle2 = new Rectangle();
-                            //Características de los rectángulos del grid
-                            rectangle2.Width = canvas2.Width / radius;
-                            rectangle2.Height = canvas2.Height / radius;
-                            rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle2.StrokeThickness = 0.1;
-                            rectangle2.Stroke = Brushes.White;
-                            canvas2.Children.Add(rectangle2);
-
-                            //Posición del rectángulo dentro del grid
-                            Canvas.SetTop(rectangle2, i * rectangle2.Height);
-                            Canvas.SetLeft(rectangle2, j * rectangle2.Width);
-
-                            rectangle2.Tag = new Point(i, j);
-                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                            rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                            rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                            rectangles2[i, j] = rectangle2;
-                        }
-                    }
-
-                    ContourSelection.SelectedIndex = 0;
-
-                    //Se cambia el valor de fase y temperatura de la celda central
-                    mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
-
-                    //Se actualiza la visualización del mesh
-                    updateMesh();
-
-                    //Se limpian los valores guardados de cada uno de los parámetros
-                    history.Clear();
-                    PhaseValues.Clear();
-                    TemperatureValues.Clear();
-
-                    //Se guarda el grid inicial en el historial
-                    history.Push(mesh.deepCopy());
-
-                    //Se visualiza un grupo de componentes del programa para poder establecer los diferentes parámetros de simulación
-                    showElements1();
-
-                    //Se calcula la fase y temperatura medias de todo el grid
-                    Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-                    PhaseValues.Add(averageTempPhase.Item2);
-                    TemperatureValues.Add(averageTempPhase.Item1);
-
-                    //Se oculta la label de "WRONG INPUTS" cuando el radio es correcto
-                    WIRadius.Visibility = Visibility.Hidden;
-                    WrongFile.Visibility = Visibility.Hidden;
+                    LOADGRID();
 
                     //Si el radio es 0, aparece la label de "WRONG INPUTS"
                     if (mesh.getSize() == 0)
@@ -158,6 +85,88 @@ namespace GameOfLife
                 WIRadius.Visibility = Visibility.Visible;
             }
         }
+
+        private void LOADGRID() 
+        {
+            rectangles1 = new Rectangle[radius, radius];
+            rectangles2 = new Rectangle[radius, radius];
+            canvas1.Children.Clear();
+            canvas2.Children.Clear();
+            for (int i = 0; i < radius; i++)
+            {
+                for (int j = 0; j < radius; j++)
+                {
+                    //Grid fase
+                    Rectangle rectangle1 = new Rectangle();
+                    //Características de los rectángulos del grid
+                    rectangle1.Width = canvas1.Width / radius;
+                    rectangle1.Height = canvas1.Height / radius;
+                    rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
+                    rectangle1.StrokeThickness = 0.1;
+                    rectangle1.Stroke = Brushes.White;
+                    canvas1.Children.Add(rectangle1);
+
+                    //Posición del rectángulo dentro del grid
+                    Canvas.SetTop(rectangle1, i * rectangle1.Height);
+                    Canvas.SetLeft(rectangle1, j * rectangle1.Width);
+
+                    rectangle1.Tag = new Point(i, j);
+                    //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
+                    rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                    rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
+                    rectangles1[i, j] = rectangle1;
+
+                    //Grid temperatura
+                    Rectangle rectangle2 = new Rectangle();
+                    //Características de los rectángulos del grid
+                    rectangle2.Width = canvas2.Width / radius;
+                    rectangle2.Height = canvas2.Height / radius;
+                    rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
+                    rectangle2.StrokeThickness = 0.1;
+                    rectangle2.Stroke = Brushes.White;
+                    canvas2.Children.Add(rectangle2);
+
+                    //Posición del rectángulo dentro del grid
+                    Canvas.SetTop(rectangle2, i * rectangle2.Height);
+                    Canvas.SetLeft(rectangle2, j * rectangle2.Width);
+
+                    rectangle2.Tag = new Point(i, j);
+                    //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
+                    rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                    rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
+                    rectangles2[i, j] = rectangle2;
+                }
+            }
+
+            ContourSelection.SelectedIndex = 0;
+
+            //Se cambia el valor de fase y temperatura de la celda central
+            mesh.startCell((radius - 1) / 2, (radius - 1) / 2);
+
+            //Se actualiza la visualización del mesh
+            updateMesh();
+
+            //Se limpian los valores guardados de cada uno de los parámetros
+            history.Clear();
+            PhaseValues.Clear();
+            TemperatureValues.Clear();
+
+            //Se guarda el grid inicial en el historial
+            history.Push(mesh.deepCopy());
+
+            //Se visualiza un grupo de componentes del programa para poder establecer los diferentes parámetros de simulación
+            showElements1();
+
+            //Se calcula la fase y temperatura medias de todo el grid
+            Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+            PhaseValues.Add(averageTempPhase.Item2);
+            TemperatureValues.Add(averageTempPhase.Item1);
+
+            //Se oculta la label de "WRONG INPUTS" cuando el radio es correcto
+            WIRadius.Visibility = Visibility.Hidden;
+            WrongFile.Visibility = Visibility.Hidden;
+        }
+
 
         //Método que refleja visualmente los cambios de las valores de fase y temperatura de cada celda
         private void updateMesh()
@@ -197,9 +206,7 @@ namespace GameOfLife
                 }
             };
             Chart1.Series = SeriesCollection;
-
             SeriesCollection = new SeriesCollection
-
             {
                 //Gráfica de temperatura
                 new LineSeries
@@ -220,8 +227,10 @@ namespace GameOfLife
         {
             if (mesh.getSize()!= 0)
             {
-                Settings.Visibility = Visibility.Visible;
+                SimControls.Visibility = Visibility.Visible;
                 GridandGraphs.Visibility = Visibility.Visible;
+                WIRadius.Visibility = Visibility.Hidden;
+                Radius.Text = Convert.ToString((mesh.getSize() - 1) / 2);
             }
         }
 
@@ -241,7 +250,6 @@ namespace GameOfLife
                 Correctparameters.Content = "Standard A loaded!";
                 Correctparameters.Visibility = Visibility.Visible;
                 Wrongparameters.Visibility = Visibility.Hidden;
-                showElements2();
             }
             //Standard B
             else if (TabControl.SelectedIndex == 1)
@@ -251,8 +259,6 @@ namespace GameOfLife
                 Correctparameters.Content = "Standard B loaded!";
                 Correctparameters.Visibility = Visibility.Visible;
                 Wrongparameters.Visibility = Visibility.Hidden;
-                showElements2();
-
             }
             //Custom
             else if (TabControl.SelectedIndex == 2)
@@ -264,7 +270,6 @@ namespace GameOfLife
                     Correctparameters.Content = "Custom loaded!";
                     Wrongparameters.Visibility = Visibility.Hidden;
                     Correctparameters.Visibility = Visibility.Visible;
-                    showElements2();
                 }
                 catch (FormatException)
                 {
@@ -273,19 +278,7 @@ namespace GameOfLife
                 }
             }
         }
-
-
-        //Método que permite visualizar los botones para poder comenzar la simulacion, llevarla a cabo manualmente o automáticamente así como establecer la velocidad
-        private void showElements2()
-        {
-            buttonStart.Background = Brushes.Green;
-            buttonStart.BorderBrush = Brushes.White;
-            buttonStart.Foreground = Brushes.White;
-            WIRadius.Visibility = Visibility.Hidden;
-            Radius.Text = Convert.ToString((mesh.getSize() - 1) / 2);
-            SimControls.Visibility = Visibility.Visible;
-        }
-        
+ 
         //Evento que permite visualizar la imagen que contiene la explicación de los dos tipos de frontera que pueden establecerse
         private void ContourInfo_Click(object sender, MouseButtonEventArgs e)
         {
@@ -462,116 +455,61 @@ namespace GameOfLife
         //Evento que permite cargar la simulación
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (mesh == null)
             {
                 mesh = new Grid(0);
-                //Se copia el grid
-                copy1 = mesh.deepCopy();
-                //Se para el reloj
-                timer.Stop();
-                //Se obtiene el parámetro que indica si el archivo se ha cargado o no
                 int result = mesh.loadGrid();
-                //Si el archivo no se ha podido cargar
-                if (mesh == null || result == -1)
+                if (result == 0)
                 {
-                    mesh=mesh.deepCopy();
-                    mesh = copy1.deepCopy();
-                    WrongFile.Visibility = Visibility.Visible;
+                    firstgrid = true;
+                    //Se establace el radio del grid
+                    int size = new int();
+                    size = mesh.getSize() + 2;
+                    radius = size - 2;
+                    LOADGRID();
+                    loadparameters();
                 }
-                //Si el archivo se ha podido cargar
                 else
+                {
+                    mesh = null;
+                    if (result == -1)
+                    {
+                        WrongFile.Visibility = Visibility.Visible;
+                    }
+                    if (result == 1)
+                    {
+                        WrongFile.Visibility = Visibility.Hidden;
+                    }
+                }
+            }
+
+            if (mesh != null && !firstgrid)
+            {
+                copy1 = mesh.deepCopy();
+                int result = mesh.loadGrid();
+                if (result == 0)
                 {
                     //Se establace el radio del grid
                     int size = new int();
-                    size = mesh.getSize();
-                    radius = size;
-
-                    //Creamos los objetos rectángulos para cada grid (fase y temperatura)
-                    rectangles1 = new Rectangle[radius, radius];
-                    rectangles2 = new Rectangle[radius, radius];
-                    canvas1.Children.Clear();
-                    canvas2.Children.Clear();
-
-                    for (int i = 0; i < radius; i++)
+                    size = mesh.getSize() + 2;
+                    radius = size - 2;
+                    LOADGRID();
+                }
+                else
+                {
+                    if (result == -1) ;
                     {
-                        for (int j = 0; j < radius; j++)
-                        {
-                            //Grid fase
-                            Rectangle rectangle1 = new Rectangle();
-                            //Características de los rectángulos del grid
-                            rectangle1.Width = canvas1.Width / radius;
-                            rectangle1.Height = canvas1.Height / radius;
-                            rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle1.StrokeThickness = 0.1;
-                            rectangle1.Stroke = Brushes.White;
-                            canvas1.Children.Add(rectangle1);
-
-                            //Posición del rectángulo dentro del grid
-                            Canvas.SetTop(rectangle1, i * rectangle1.Height);
-                            Canvas.SetLeft(rectangle1, j * rectangle1.Width);
-
-                            rectangle1.Tag = new Point(i, j);
-                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                            rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                            rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                            rectangles1[i, j] = rectangle1;
-
-
-                            //Grid temperature
-                            Rectangle rectangle2 = new Rectangle();
-                            //Características de los rectángulos del grid
-                            rectangle2.Width = canvas2.Width / radius;
-                            rectangle2.Height = canvas2.Height / radius;
-                            rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                            rectangle2.StrokeThickness = 0.1;
-                            rectangle2.Stroke = Brushes.White;
-                            canvas2.Children.Add(rectangle2);
-
-                            //Posición del rectángulo dentro del grid
-                            Canvas.SetTop(rectangle2, i * rectangle2.Height);
-                            Canvas.SetLeft(rectangle2, j * rectangle2.Width);
-
-                            rectangle2.Tag = new Point(i, j);
-                            //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                            rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                            rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                            rectangles2[i, j] = rectangle2;
-
-                            WrongFile.Visibility = Visibility.Hidden;
-                            Radius.Text = Convert.ToString((mesh.getSize()-1)/2);
-                        }
+                        timer.Stop();
+                        mesh = copy1.deepCopy();
+                        WrongFile.Visibility = Visibility.Visible;
                     }
-
-                    //Se limpian los valores guardados de cada uno de los parámetros
-                    history.Clear();
-                    history.Push(mesh.deepCopy());
-
-                    //Establece de forma predeterminada las condiciones del contorno: contorno constante (0) o reflector (1)
-                    ContourSelection.SelectedIndex = 0;
-
-
-                    //Se actulizan los cambios visualmente
-                    updateMesh();
-
-                    //Se visualiza un grupo de componentes del programa para poder establecer los diferentes parámetros de simulación
-                    showElements1();
-
-                    ////Se calcula la fase y temperatura medias de todo el grid
-                    Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-                    PhaseValues.Add(averageTempPhase.Item2);
-                    TemperatureValues.Add(averageTempPhase.Item1);
+                    if (result == 1)
+                    {
+                        WrongFile.Visibility = Visibility.Hidden;
+                    }
                 }
             }
-            //Caso en el que el formato del archivo no sea correcto
-            catch (FileFormatException)
-            {
-                WrongFile.Visibility = Visibility.Visible;
-            }
-            //Caso en el que no se haya podido encontrar el archivo
-            catch (DirectoryNotFoundException)
-            {
 
-            }
         }
     }
 }

@@ -6,34 +6,24 @@
         Title="Crystal Simulator" Height="718" Width="1300" Icon="Images/SnowFlake.png" ResizeMode="CanMinimize" OpacityMask="#FF565656" FontWeight="Normal" WindowStyle="SingleBorderWindow" Foreground="#FF565656" BorderBrush="#FF565656" Background="#FF565656" WindowStartupLocation="CenterScreen">
 
     <Grid Background="#FF232323" Height="745">
-        <Label Content="Crystal Simulator" x:Name="label1" Margin="101,45,0,0" FontSize="29" FontFamily="Consolas" Foreground="White" BorderBrush="#FF262626" FontWeight="Bold" HorizontalAlignment="Left" Width="283" Height="45" VerticalAlignment="Top" Background="#00000000"/>
-        <Grid HorizontalAlignment="Left" Height="100" Margin="64,124,0,0" VerticalAlignment="Top" Width="320">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="97*"/>
-                <ColumnDefinition Width="63*"/>
-            </Grid.ColumnDefinitions>
+        <Label Content="Crystal Simulator" x:Name="label1" Margin="124,45,0,0" FontSize="29" FontFamily="Consolas" Foreground="White" BorderBrush="#FF262626" FontWeight="Bold" HorizontalAlignment="Left" Width="283" Height="45" VerticalAlignment="Top" Background="#00000000"/>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="80,106,0,0" VerticalAlignment="Top" Width="320">
             <TextBox Margin="112,35,0,0" x:Name="Radius" TextAlignment="Center" BorderBrush="White" TabIndex="0" Height="18" VerticalAlignment="Top" HorizontalAlignment="Left" Width="36" Background="#00000000" Foreground="White" FontFamily="Consolas" />
             <Button Content="Load grid" Margin="176,16,0,0" x:Name="LoadGrid" Click="LoadGrid_Click" FontFamily="Consolas" Cursor="Arrow" Foreground="White" BorderBrush="White" Background="#00DDDDDD" TabIndex="2" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="126" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="Radius" Height="28" HorizontalAlignment="Left" Margin="52,33,0,0" x:Name="label2" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
             <Button Content="Load simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="176,50,0,0" x:Name="loadSimualtion" VerticalAlignment="Top" Width="126" Click="loadSimualtion_Click" Background="#00DDDDDD" BorderBrush="White" TabIndex="3" Foreground="White" FontWeight="Bold" Grid.ColumnSpan="2" />
             <Label Content="WRONG INPUTS" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WIRadius" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" />
-            <Label Content="File not loaded" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WrongFile" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center"/>
+            <Label Content="The file could not be uploaded" FontFamily="Consolas" Margin="52,-16,41,0" x:Name="WrongFile" Foreground="Red" FontWeight="Bold" Height="25" VerticalAlignment="Top" HorizontalAlignment="Center" Width="227" Grid.ColumnSpan="2" HorizontalContentAlignment="Center"/>
         </Grid>
-        <Grid Name="SimControls" HorizontalAlignment="Left" Height="191" Margin="11,471,0,0" VerticalAlignment="Top" Width="507">
-            <Slider Height="23" HorizontalAlignment="Left" Margin="218,11,0,0" x:Name="speedSlider" VerticalAlignment="Top" Width="140" ValueChanged="speedSlider_ValueChanged" Foreground="Red" Background="#00000000" BorderBrush="Red" TabIndex="6" />
-            <Button Content="Restart" Height="27" HorizontalAlignment="Left" Margin="193,99,0,-26" x:Name="restart" VerticalAlignment="Top" Width="126" FontFamily="Consolas" DataContext="{Binding}" Click="restart_Click" BorderBrush="White" TabIndex="10" Foreground="White" Background="#00000000" FontWeight="Bold" />
-            <Button Content="Start" Height="27" HorizontalAlignment="Left" Margin="193,56,0,0" x:Name="buttonStart" VerticalAlignment="Top" Width="126" Click="buttonStart_Click" FontFamily="Consolas" BorderBrush="Red" TabIndex="8" Foreground="Red" Background="#00000000" FontWeight="Bold" />
-            <Button Content="Previous iteration" Height="27" HorizontalAlignment="Left" Margin="49,56,0,0" x:Name="previousIteration" VerticalAlignment="Top" Width="126" FontFamily="Consolas" Foreground="White" BorderBrush="White" Background="#00DDDDDD" Click="previousIteration_Click" TabIndex="7" FontWeight="Bold" />
-            <Button Content="Next iteration" Height="27" HorizontalAlignment="Left" Margin="337,56,0,0" x:Name="nextIteration" VerticalAlignment="Top" Width="126" Click="nextIteration_Click" FontFamily="Consolas" BorderBrush="White" TabIndex="9" IsEnabled="True" Background="#00000000" Foreground="White" FontWeight="Bold" />
-            <Label Content="Speed" FontFamily="Consolas" Height="28" HorizontalAlignment="Left" Margin="155,6,0,0" x:Name="speedLabel" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" />
-            <Button Content="Save simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="193,144,0,-71" x:Name="saveSimulation" VerticalAlignment="Top" Width="126" Click="saveSimulation_Click" BorderBrush="White" TabIndex="11" Background="#00000000" Foreground="White" FontWeight="Bold" />
-        </Grid>
-        <Grid Name="Settings" HorizontalAlignment="Left" Height="260" Margin="11,224,0,0" VerticalAlignment="Top" Width="477">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="13*"/>
-                <ColumnDefinition Width="40*"/>
-            </Grid.ColumnDefinitions>
-            <TabControl TabStripPlacement="Top" Name="TabControl" HorizontalAlignment="Left" Height="156" Margin="9,10,0,0" VerticalAlignment="Top" Width="267" Grid.Column="1">
+        <Grid Name="SimControls" HorizontalAlignment="Left" Height="433" Margin="11,213,0,0" VerticalAlignment="Top" Width="507">
+            <Slider Height="23" HorizontalAlignment="Left" Margin="186,263,0,0" x:Name="speedSlider" VerticalAlignment="Top" Width="140" ValueChanged="speedSlider_ValueChanged" Foreground="Red" Background="#00000000" BorderBrush="Red" TabIndex="6" />
+            <Button Content="Restart" Height="27" HorizontalAlignment="Left" Margin="193,353,0,0" x:Name="restart" VerticalAlignment="Top" Width="126" FontFamily="Consolas" DataContext="{Binding}" Click="restart_Click" BorderBrush="White" TabIndex="10" Foreground="White" Background="#00000000" FontWeight="Bold" />
+            <Button Content="Start" Height="27" HorizontalAlignment="Left" Margin="193,310,0,0" x:Name="buttonStart" VerticalAlignment="Top" Width="126" Click="buttonStart_Click" FontFamily="Consolas" BorderBrush = "White" TabIndex="8" Foreground = "White" Background = "Green" FontWeight="Bold" />
+            <Button Content="Previous iteration" Height="27" HorizontalAlignment="Left" Margin="49,310,0,0" x:Name="previousIteration" VerticalAlignment="Top" Width="126" FontFamily="Consolas" Foreground="White" BorderBrush="White" Background="#00DDDDDD" Click="previousIteration_Click" TabIndex="7" FontWeight="Bold" />
+            <Button Content="Next iteration" Height="27" HorizontalAlignment="Left" Margin="337,310,0,0" x:Name="nextIteration" VerticalAlignment="Top" Width="126" Click="nextIteration_Click" FontFamily="Consolas" BorderBrush="White" TabIndex="9" IsEnabled="True" Background="#00000000" Foreground="White" FontWeight="Bold" />
+            <Label Content="Speed" FontFamily="Consolas" Height="28" HorizontalAlignment="Left" Margin="121,261,0,0" x:Name="speedLabel" VerticalAlignment="Top" Foreground="White" FontWeight="Bold" />
+            <Button Content="Save simulation" FontFamily="Consolas" Height="27" HorizontalAlignment="Left" Margin="193,398,0,0" x:Name="saveSimulation" VerticalAlignment="Top" Width="126" Click="saveSimulation_Click" BorderBrush="White" TabIndex="11" Background="#00000000" Foreground="White" FontWeight="Bold" />
+            <TabControl TabStripPlacement="Top" Name="TabControl" HorizontalAlignment="Left" Height="156" Margin="120,0,0,0" VerticalAlignment="Top" Width="267" Grid.Column="1">
                 <TabItem Header="Standard A" Margin="-2,-2,-16,0" RenderTransformOrigin="0.5,0.5">
                     <TabItem.RenderTransform>
                         <TransformGroup>
@@ -82,34 +72,21 @@
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="9,221,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" Grid.Column="1" />
-            <ComboBox Height="23" HorizontalAlignment="Left" Margin="90,221,0,0" x:Name="ContourSelection" VerticalAlignment="Top" Width="147" SelectionChanged="ContourSelection_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White" Grid.Column="1">
+            <Label Content="Boundaries" Height="28" HorizontalAlignment="Left" Margin="121,221,0,0" x:Name="label8" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" />
+            <ComboBox Height="23" HorizontalAlignment="Left" Margin="202,221,0,0" x:Name="ContourSelection" VerticalAlignment="Top" Width="147" SelectionChanged="ContourSelection_SelectionChanged" FontFamily="Consolas" BorderBrush="Black" TabIndex="5" Foreground="Black" Background="White">
                 <ComboBoxItem Content="Constant contour"></ComboBoxItem>
                 <ComboBoxItem Content="Reflective contour"></ComboBoxItem>
             </ComboBox>
-            <Image Height="23" HorizontalAlignment="Left" Margin="244,221,0,0" x:Name="ContourInfo" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="ContourInfo_Click" VerticalAlignment="Top" Grid.Column="1"/>
-            <Button Name="Loadparameters" Content="Load parameters" HorizontalAlignment="Left" Margin="9,180,0,0" VerticalAlignment="Top" Width="118" Height="27" FontFamily="Consolas" Background="#00000000" BorderBrush="White" Foreground="White" FontWeight="Bold" Click="LoadParameters" Grid.Column="1"/>
-            <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="WRONG INPUTS" FontFamily="Consolas" Margin="123,180,0,0" x:Name="Wrongparameters" Foreground="Red" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="140" Grid.Column="1" />
-            <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Consolas" Margin="123,180,0,0" x:Name="Correctparameters" Foreground="Green" FontWeight="Bold" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" Grid.Column="1" />
-            <Label Name="Parameters" Content="Parameters" HorizontalAlignment="Left" Margin="4,-19,0,0" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold" Grid.Column="1"/>
+            <Image Height="23" HorizontalAlignment="Left" Margin="356,221,0,0" x:Name="ContourInfo" Source="/GameOfLife;component/Images/Info.png" Stretch="Fill" Width="23" MouseLeftButtonDown="ContourInfo_Click" VerticalAlignment="Top"/>
+            <Button Name="Loadparameters" Content="Load parameters" HorizontalAlignment="Left" Margin="123,179,0,0" VerticalAlignment="Top" Width="118" Height="27" FontFamily="Consolas" Background="#00000000" BorderBrush="White" Foreground="White" FontWeight="Bold" Click="LoadParameters"/>
+            <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Content="WRONG INPUTS" FontFamily="Consolas" Margin="241,180,0,0" x:Name="Wrongparameters" Foreground="Red" FontWeight="Bold" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="140" Grid.Column="1" />
+            <Label VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontFamily="Consolas" Margin="241,180,0,0" x:Name="Correctparameters" Foreground="Green" FontWeight="Bold" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="149" />
+            <Label Name="Parameters" Content="Parameters" HorizontalAlignment="Left" Margin="119,-28,0,0" VerticalAlignment="Top" FontFamily="Consolas" Foreground="White" FontWeight="Bold"/>
         </Grid>
         <Grid Name="GridandGraphs" Margin="528,45,76,121">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>-->
             <lvc:CartesianChart Name="Chart1" Margin="0,391,390,-38" FontFamily="Consolas">
                 <lvc:CartesianChart.AxisX>
                     <lvc:Axis Title="Iteration" MinValue="0" FontSize="13" FontFamily="Consolas">
-                        <!--<lvc:Axis.Separator>
-                            <lvc:Separator 
-                                Step="1">
-                            </lvc:Separator>
-                        </lvc:Axis.Separator>-->
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
                 <lvc:CartesianChart.AxisY>

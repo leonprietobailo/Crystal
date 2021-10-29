@@ -289,7 +289,7 @@ namespace GameOfLife
                 }
                 else 
                 {
-                    return -1;
+                    return 1;
                 }
             }
             //Caso en el que el formato del archivo que se quiere cargar no sea correcto
