@@ -18,11 +18,12 @@ namespace Crystal
         int radius, rowInside, columnInside;
         bool timerStatus, inside, firstGrid;
         long ticks;
+        Rules r;
         Rectangle[,] phaseRectangles, temperatureRectangles;
         Stack<Grid> history = new Stack<Grid>();
         Grid mesh, temporaryMesh;
         DispatcherTimer timer = new DispatcherTimer();
-        Rules r;
+        //Gráficas
         ChartValues<double> phaseValues = new ChartValues<double>();
         ChartValues<double> temperatureValues = new ChartValues<double>();
         public SeriesCollection SeriesCollection;
@@ -37,7 +38,6 @@ namespace Crystal
             timer.Interval = new TimeSpan(ticks);
             //Establecemos los valores del gráfico
             setChartNumbers();
-
             //Oculta parte del programa para mostrarlo parcialmente al inicializar
             WIRadius.Visibility = Visibility.Hidden;
             WrongFile.Visibility = Visibility.Hidden;
@@ -46,13 +46,14 @@ namespace Crystal
             Wrongparameters.Visibility = Visibility.Hidden;
         }
 
-        //Evento que permite crear un grid con celdas con valor y fase predeterminados
+        //Evento que permite crear un grid con celdas con valor de temperatura y fase predeterminados
         private void LoadGrid_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 if (Convert.ToInt32(Radius.Text) > 0)
                 {
+                    //Se establece el valor del radio del grid
                     radius = Convert.ToInt32(Radius.Text) * 2 + 1;
                     mesh = new Grid(radius);
                     //Creamos los objetos rectángulos para cada grid (fase y temperatura)
@@ -61,13 +62,11 @@ namespace Crystal
                     phaseCanvas.Children.Clear();
                     temperatureCanvas.Children.Clear();
                     loadGrid();
-
                     //Si el radio es 0, aparece la label de "WRONG INPUTS"
                     if (mesh.getSize() == 0)
                     {
                         WIRadius.Visibility = Visibility.Visible;
                     }
-
                     loadParameters();
                 }
                 else
@@ -87,9 +86,10 @@ namespace Crystal
             }
         }
 
-        //Evento que permite 
+        //Método que permite cargar un grid con radio previamente determinado
         private void loadGrid() 
         {
+            //Creamos los objetos rectángulos para cada grid (fase y temperatura)
             phaseRectangles = new Rectangle[radius, radius];
             temperatureRectangles = new Rectangle[radius, radius];
             phaseCanvas.Children.Clear();
@@ -139,7 +139,7 @@ namespace Crystal
                     temperatureRectangles[i, j] = tRectangle;
                 }
             }
-
+            //Se establece el Contorno Constante como frontera predeterminada
             ContourSelection.SelectedIndex = 0;
 
             //Se cambia el valor de fase y temperatura de la celda central
@@ -169,7 +169,6 @@ namespace Crystal
             WrongFile.Visibility = Visibility.Hidden;
         }
 
-
         //Método que refleja visualmente los cambios de las valores de fase y temperatura de cada celda
         private void updateMesh()
         {
@@ -178,7 +177,6 @@ namespace Crystal
                 for (int j = 0; j < radius; j++)
                 {
                     //Debido a que hay ciertos casos en los que la fase y temperatura se salen de sus valores físicos, aplicamos una simple corrección para el color.
-
                     double correctedTemperature;
                     double correctedPhase;
 
@@ -257,9 +255,10 @@ namespace Crystal
             Chart1_Copy.Series = SeriesCollection;
         }
 
-        //Método que permite visualizar los parámetros de simulación y las condiciones de frontera
+        //Método que permite visualizar los parámetros de simulación, las condiciones de frontera y los botones que permiten interactuar con la simulación
         private void showElements1()
         {
+            //Si el valor del radio introducido es diferente de 0
             if (mesh.getSize()!= 0)
             {
                 SimControls.Visibility = Visibility.Visible;
@@ -276,7 +275,7 @@ namespace Crystal
             WrongFile.Visibility = Visibility.Hidden;
         }
 
-        //Se cargan los parametros de la malla.
+        //Evento que permite cargar los parametros del grid
         private void loadParameters() 
         {
             //Standard A
@@ -302,6 +301,7 @@ namespace Crystal
             //Custom
             else if (TabControl.SelectedIndex == 2)
             {
+                //Si los parámetros introducidos son correctos
                 try
                 {
                     r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
@@ -310,6 +310,7 @@ namespace Crystal
                     Wrongparameters.Visibility = Visibility.Hidden;
                     Correctparameters.Visibility = Visibility.Visible;
                 }
+                //Si los paráetros introducidos no son correctos
                 catch (FormatException)
                 {
                     Wrongparameters.Visibility = Visibility.Visible;
@@ -342,6 +343,8 @@ namespace Crystal
             //Se establce el intervalo de tiempo entre iteraciones??
             timer.Interval = new TimeSpan(ticks);
         }
+
+        //Evento que permite cambiar el botón Start/Stop a la configuración de Start (Color verde)
         private void showStartButton()
         {
             if (timerStatus)
@@ -354,6 +357,8 @@ namespace Crystal
                 timerStatus = false;
             }
         }
+
+        //Evento que permite cmbiar el botón Start/Stop a la configuración de Stop (Color rojo)
         private void startStop()
         {
             //Si ha comenzado la simulación de forma automatica
@@ -374,11 +379,15 @@ namespace Crystal
             }
 
         }
+
         //Evento que permite comenzar la simulación de forma automatica 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
         {
-            WrongFile.Visibility = Visibility.Hidden;
-            startStop();
+            if (Wrongparameters.Visibility==Visibility.Hidden)
+            {
+                WrongFile.Visibility = Visibility.Hidden;
+                startStop();
+            }
         }
 
         //Evento que permite activar el reloj para ejecutar la simulación automática
@@ -400,51 +409,58 @@ namespace Crystal
 
         //Evento que permite ejecutar la siguiente iteración de la simulación
         private void nextIteration_Click(object sender, RoutedEventArgs e)
-        {   //Detenemos el timer.
-            showStartButton();
-            WrongFile.Visibility = Visibility.Hidden;
-            //Se añaden los valores al historial
-            history.Push(mesh.deepCopy());
-            //Se realiza el calculo de la próxima fase y temperatura 
-            mesh.Iterate();
-            //Cálculo de la fase y temperatura medias en cada iteración
-            Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-            phaseValues.Add(averageTempPhase.Item2);
-            temperatureValues.Add(averageTempPhase.Item1);
-            //Se actulizan los cambios visualmente
-            updateMesh();
-            //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
-            insideornot();
-        }
-
-        //Evento que permite ejecutar la anterior iteración de la simulación
-        private void previousIteration_Click(object sender, RoutedEventArgs e)
         {
-            WrongFile.Visibility = Visibility.Hidden;
-            try
+            if (Wrongparameters.Visibility == Visibility.Hidden)
             {
-                //Se detiene reloj.
+                //Detenemos el timer.
                 showStartButton();
-                //Se quita el último elemento del historial
-                if (history.Count > 1)
-                {
-                    mesh = history.Pop();
-                }
-                
-                //Se quitan los ultimos valores de fase y temperaturas de la gráfica
-                if (phaseValues.Count != 1)
-                {
-                    phaseValues.RemoveAt(phaseValues.Count - 1);
-                    temperatureValues.RemoveAt(temperatureValues.Count - 1);
-                }
+                WrongFile.Visibility = Visibility.Hidden;
+                //Se añaden los valores al historial
+                history.Push(mesh.deepCopy());
+                //Se realiza el calculo de la próxima fase y temperatura 
+                mesh.Iterate();
+                //Cálculo de la fase y temperatura medias en cada iteración
+                Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
+                phaseValues.Add(averageTempPhase.Item2);
+                temperatureValues.Add(averageTempPhase.Item1);
                 //Se actulizan los cambios visualmente
                 updateMesh();
                 //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
                 insideornot();
             }
-            //Caso en el que ya no hay más elementos en el historial
-            catch (InvalidOperationException)
+        }
+
+        //Evento que permite ejecutar la anterior iteración de la simulación
+        private void previousIteration_Click(object sender, RoutedEventArgs e)
+        {
+            if (Wrongparameters.Visibility == Visibility.Hidden)
             {
+                WrongFile.Visibility = Visibility.Hidden;
+                try
+                {
+                    //Se detiene reloj.
+                    showStartButton();
+                    //Se quita el último elemento del historial
+                    if (history.Count > 1)
+                    {
+                        mesh = history.Pop();
+                    }
+
+                    //Se quitan los ultimos valores de fase y temperaturas de la gráfica
+                    if (phaseValues.Count != 1)
+                    {
+                        phaseValues.RemoveAt(phaseValues.Count - 1);
+                        temperatureValues.RemoveAt(temperatureValues.Count - 1);
+                    }
+                    //Se actulizan los cambios visualmente
+                    updateMesh();
+                    //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
+                    insideornot();
+                }
+                //Caso en el que ya no hay más elementos en el historial
+                catch (InvalidOperationException)
+                {
+                }
             }
         }
 
@@ -523,6 +539,7 @@ namespace Crystal
         //Evento que permite cargar la simulación
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
+            firstGrid = false;
             //Detenemos el timer
             showStartButton();
             //Si no hay malla creada
@@ -569,13 +586,11 @@ namespace Crystal
                     //Si la carga del fichero no ha sido satisfactoria
                     if (result == -1)
                     {
-                        
                         mesh = temporaryMesh.deepCopy();
                         WrongFile.Visibility = Visibility.Visible;
                     }
                 }
             }
-
         }
     }
 }

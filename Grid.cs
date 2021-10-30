@@ -11,19 +11,19 @@ namespace Crystal
     class Grid
     {
         //Atributos del grid
-        int i, boundaries;
+        int radius, boundaries;
         Cell[,] array;
         Rules r;
 
         //Constructor del grid (desde otro grid).
         public Grid(Grid grid)
         {
-            i = grid.i;
+            radius = grid.radius;
             r = grid.r;
-            array = new Cell[i, i];
-            for (int n = 0; n < i; n++)
+            array = new Cell[radius, radius];
+            for (int n = 0; n < radius; n++)
             {
-                for (int s = 0; s < i; s++)
+                for (int s = 0; s < radius; s++)
                 {
                     array[n, s] = new Cell(grid.array[n, s].getTemperature(), grid.array[n, s].getPhase());
                 }
@@ -34,12 +34,12 @@ namespace Crystal
         public Grid(int iIn)
         {
             //Se añaden las fronteras a las dimensiones introducidas
-            i = iIn + 2;
-            array = new Cell[this.i, this.i];
+            radius = iIn + 2;
+            array = new Cell[this.radius, this.radius];
             //Se rellena la malla con un estado por defecto
-            for (int n = 0; n < this.i; n++)
+            for (int n = 0; n < this.radius; n++)
             {
-                for (int s = 0; s < this.i; s++)
+                for (int s = 0; s < this.radius; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
                 }
@@ -56,7 +56,7 @@ namespace Crystal
         //Método que retorna el tamaño del grid visible (sin contorno)
         public int getSize()
         {
-            int size = i - 2;
+            int size = radius - 2;
             return size;
         }
 
@@ -72,16 +72,16 @@ namespace Crystal
             return array[n + 1, s + 1].getPhase();
         }
 
-        //Método que retorna el valor de la temperatura y fase media de todas las células del grid
+        //Método que retorna el valor de la temperatura y fase media de todas las celdas del grid
         public Tuple<double, double> getAverageTemperaturePhase()
         {
             int counter = 0;
             double totalTemperature = 0;
             double totalPhase = 0;
             //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
-            for (int n = 1; n < this.i - 1; n++)
+            for (int n = 1; n < this.radius - 1; n++)
             {
-                for (int s = 1; s < this.i - 1; s++)
+                for (int s = 1; s < this.radius - 1; s++)
                 {
                     totalTemperature += array[n, s].getTemperature();
                     totalPhase += array[n, s].getPhase();
@@ -113,28 +113,28 @@ namespace Crystal
             {
                 //Se establecen los valores de las esquinas de las fronteras
                 array[0, 0] = array[2, 2];
-                array[0, i - 1] = array[2, i - 3];
-                array[i - 1, 0] = array[i - 3, 2];
-                array[i - 1, i - 1] = array[i - 3, i - 3];
+                array[0, radius - 1] = array[2, radius - 3];
+                array[radius - 1, 0] = array[radius - 3, 2];
+                array[radius - 1, radius - 1] = array[radius - 3, radius - 3];
 
                 //Se establecen el resto de valores de las fronteras
-                for (int n = 1; n < i - 1; n++)
+                for (int n = 1; n < radius - 1; n++)
                 {
                     array[n, 0] = array[n, 2];
-                    array[n, i - 1] = array[n, i - 3];
+                    array[n, radius - 1] = array[n, radius - 3];
                     array[0, n] = array[2, n];
-                    array[i - 1, n] = array[i - 3, n];
+                    array[radius - 1, n] = array[radius - 3, n];
                 }
             }
             //Contorno constante
             else
             {
-                for (int n = 0; n < i; n++)
+                for (int n = 0; n < radius; n++)
                 {
                     array[n, 0] = new Cell(-1, 1);
-                    array[n, i - 1] = new Cell(-1, 1);
+                    array[n, radius - 1] = new Cell(-1, 1);
                     array[0, n] = new Cell(-1, 1);
-                    array[i - 1, n] = new Cell(-1, 1);
+                    array[radius - 1, n] = new Cell(-1, 1);
                 }
             }
         }
@@ -143,9 +143,9 @@ namespace Crystal
         public void Iterate()
         {
             //Se calcula el próximo valor de fase y temperatura de cada celda
-            for (int n = 1; n < this.i - 1; n++)
+            for (int n = 1; n < this.radius - 1; n++)
             {
-                for (int s = 1; s < this.i - 1; s++)
+                for (int s = 1; s < this.radius - 1; s++)
                 {
                     //Se establecen los vectores que contendrán los valores de fase y temperatura de las celdas vecinas
                     double[] uN = new double[4];
@@ -167,9 +167,9 @@ namespace Crystal
                 }
             }
             //Se establece el próximo estado de fase y temperatura de cada celda anteriormente calculado como estado actual
-            for (int n = 1; n < this.i - 1; n++)
+            for (int n = 1; n < this.radius - 1; n++)
             {
-                for (int s = 1; s < this.i - 1; s++)
+                for (int s = 1; s < this.radius - 1; s++)
                 {
                     array[n, s].setNextStatus();
                 }
@@ -178,18 +178,18 @@ namespace Crystal
 
         //Método que resetea el grid asociando a cada celda un valor de fase y termperatura predeterminados: valor fase (1) / valor temperatura (-1)
         //En la celda central del grid se asocian: valor fase (0) / valor temperatura (0)
-        public void reset() 
+        public void reset()
         {
-            for (int n = 1; n < i - 1; n++)
+            for (int n = 1; n < radius - 1; n++)
             {
-                for (int s = 1; s < i - 1; s++)
+                for (int s = 1; s < radius - 1; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
                 }
             }
         }
 
-        //Método que realiza una copia del grid
+        //Método que realiza una copia del grid y la retorna
         public Grid deepCopy()
         {
             Grid deepCopyGrid = new Grid(this);
@@ -215,22 +215,22 @@ namespace Crystal
                 emptyFile.Close();
 
                 //Recorre el grid de la simulación que se quiere guardar
-                for (int n = 0; n < this.i; n++)
+                for (int n = 0; n < this.radius; n++)
                 {
-                    for (int s = 0; s < this.i; s++)
+                    for (int s = 0; s < this.radius; s++)
                     {
                         //Escribe en el archivo los valores de temperatura y fase por "|"
                         File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getTemperature()));
                         File.AppendAllText(dig.FileName, "|");
                         File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getPhase()));
                         //Separa cada valor de celda con " "
-                        if (s != i - 1)
+                        if (s != radius - 1)
                         {
                             File.AppendAllText(dig.FileName, " ");
                         }
                     }
                     //Hace un salto de linea cada vez que estamos en una fila diferente del grid
-                    if (n != i - 1)
+                    if (n != radius - 1)
                     {
                         File.AppendAllText(dig.FileName, "\n");
                     }
@@ -260,10 +260,10 @@ namespace Crystal
                     string strReadline = readFile.ReadLine();
 
                     //Cuenta el número de columnas que tiene el archivo y actualiza el atributo "i" de la clase Grid
-                    i = strReadline.Split('|').Length - 1;
+                    radius = strReadline.Split('|').Length - 1;
 
                     //Carga un grid cuadrado de dimension igual al numero de columnas
-                    Grid loadedGrid = new Grid(i);
+                    Grid loadedGrid = new Grid(radius);
 
                     //Recorre el grid creado y establece cada valor de fase y temperatura de cada celda con la información del archivo que estamos leyendo
                     int s = 0;
@@ -290,7 +290,7 @@ namespace Crystal
                     array = loadedGrid.array;
                     return 0;
                 }
-                else 
+                else
                 {
                     return 1;
                 }
