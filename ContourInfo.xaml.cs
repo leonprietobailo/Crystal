@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace GameOfLife
+namespace Crystal
 {
     public partial class ContourInfo : Window
     {

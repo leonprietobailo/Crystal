@@ -6,7 +6,7 @@ using System.IO;
 using Microsoft.Win32;
 
 
-namespace GameOfLife
+namespace Crystal
 {
     class Grid
     {

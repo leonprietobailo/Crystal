@@ -10,7 +10,7 @@ using System.IO;
 using LiveCharts;
 using LiveCharts.Wpf;
 
-namespace GameOfLife
+namespace Crystal
 {
     public partial class MainWindow : Window
     {
@@ -176,14 +176,47 @@ namespace GameOfLife
             {
                 for (int j = 0; j < radius; j++)
                 {
+                    //Debido a que hay ciertos casos en los que la fase y temperatura se salen de sus valores físicos, aplicamos una simple corrección para el color.
+
+                    double correctedTemperature;
+                    double correctedPhase;
+
+                    //Correcciones de temperatura
+                    if (mesh.getCellTemperature(i, j) < -1)
+                    {
+                        correctedTemperature = -1; 
+                    }
+
+                    else if (mesh.getCellTemperature(i,j) > 0)
+                    {
+                        correctedTemperature = 0;
+                    }
+
+                    else
+                    {
+                        correctedTemperature = mesh.getCellTemperature(i, j);
+                    }
+
+                    //Correciones de fase.
+                    if (mesh.getCellPhase(i, j) > 1)
+                    {
+                        correctedPhase = 1;
+                    }
+
+                    else if (mesh.getCellPhase(i, j) < 0)
+                    {
+                        correctedPhase = 0;
+                    }
+
+                    else
+                    {
+                        correctedPhase = mesh.getCellTemperature(i, j);
+                    }
+
                     //Se calcula la distribución de colores de acuerdo a una función exponencial
                     double a = 255 * Math.Pow(1.0 - mesh.getCellPhase(i, j), 1.0 / 4.0);
-                    double b = 255 * Math.Sqrt(mesh.getCellTemperature(i, j) + 1);
+                    double b = 255 * Math.Sqrt(correctedTemperature + 1);
 
-                    if (mesh.getCellTemperature(i, j) + 1 < 0)
-                    {
-                        b = 0;
-                    }
                     //Se rellenan los rectángulos con color
                     rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(a), 0, 0, 255));
                     rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(b), 255, 0, 0));
@@ -239,8 +272,10 @@ namespace GameOfLife
         private void LoadParameters(object sender, RoutedEventArgs e)
         {
             loadparameters();
+            WrongFile.Visibility = Visibility.Hidden;
         }
 
+        //Se cargan los parametros de la malla.
         private void loadparameters() 
         {
             //Standard A
@@ -305,8 +340,7 @@ namespace GameOfLife
             timer.Interval = new TimeSpan(ticks);
         }
 
-        //Evento que permite comenzar la simulación de forma automatica 
-        private void buttonStart_Click(object sender, RoutedEventArgs e)
+        private void startStop()
         {
             //Si ha comenzado la simulación de forma automatica
             if (!timerStatus)
@@ -330,6 +364,12 @@ namespace GameOfLife
                 timerStatus = false;
             }
         }
+        //Evento que permite comenzar la simulación de forma automatica 
+        private void buttonStart_Click(object sender, RoutedEventArgs e)
+        {
+            WrongFile.Visibility = Visibility.Hidden;
+            startStop();
+        }
 
         //Evento que permite activar el reloj para ejecutar la simulación automática
         private void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -350,7 +390,9 @@ namespace GameOfLife
 
         //Evento que permite ejecutar la siguiente iteración de la simulación
         private void nextIteration_Click(object sender, RoutedEventArgs e)
-        {
+        {   //Detenemos el timer.
+            timer.Stop();
+            WrongFile.Visibility = Visibility.Hidden;
             //Se añaden los valores al historial
             history.Push(mesh.deepCopy());
             //Se realiza el calculo de la próxima fase y temperatura 
@@ -368,15 +410,23 @@ namespace GameOfLife
         //Evento que permite ejecutar la anterior iteración de la simulación
         private void previousIteration_Click(object sender, RoutedEventArgs e)
         {
+            WrongFile.Visibility = Visibility.Hidden;
             try
             {
-                //Se para el reloj
-                timer.Stop();
+                //Se detiene reloj.
+                startStop();
                 //Se quita el último elemento del historial
-                mesh = history.Pop();
+                if (history.Count > 1)
+                {
+                    mesh = history.Pop();
+                }
+                
                 //Se quitan los ultimos valores de fase y temperaturas de la gráfica
-                PhaseValues.RemoveAt(PhaseValues.Count - 1);
-                TemperatureValues.RemoveAt(TemperatureValues.Count - 1);
+                if (PhaseValues.Count != 1)
+                {
+                    PhaseValues.RemoveAt(PhaseValues.Count - 1);
+                    TemperatureValues.RemoveAt(TemperatureValues.Count - 1);
+                }
                 //Se actulizan los cambios visualmente
                 updateMesh();
                 //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
@@ -391,10 +441,11 @@ namespace GameOfLife
         //Evento que permite volver a comenzar la simulación
         private void restart_Click(object sender, RoutedEventArgs e)
         {
+            WrongFile.Visibility = Visibility.Hidden;
             //Se limpia el historial
             history.Clear();
             //Se para el reloj
-            timer.Stop();
+            startStop();
             //Se resetear el grid
             mesh.reset();
             mesh.startCell(mesh.getSize()/2, mesh.getSize()/2);
@@ -451,6 +502,8 @@ namespace GameOfLife
         private void saveSimulation_Click(object sender, RoutedEventArgs e)
         {
             mesh.saveGrid();
+            timer.Stop();
+            WrongFile.Visibility = Visibility.Hidden;
         }
 
         //Evento que permite cargar la simulación
@@ -477,10 +530,6 @@ namespace GameOfLife
                     {
                         WrongFile.Visibility = Visibility.Visible;
                     }
-                    if (result == 1)
-                    {
-                        WrongFile.Visibility = Visibility.Hidden;
-                    }
                 }
             }
 
@@ -500,13 +549,9 @@ namespace GameOfLife
                 {
                     if (result == -1) ;
                     {
-                        timer.Stop();
+                        startStop();
                         mesh = copy1.deepCopy();
                         WrongFile.Visibility = Visibility.Visible;
-                    }
-                    if (result == 1)
-                    {
-                        WrongFile.Visibility = Visibility.Hidden;
                     }
                 }
             }

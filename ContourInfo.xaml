@@ -1,4 +1,4 @@
-﻿<Window x:Class="GameOfLife.ContourInfo"
+﻿<Window x:Class="Crystal.ContourInfo"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Boundaries" Height="640" Width="1135" Icon="Images/SnowFlake.png" Foreground="#FF232323" Background="#FF232323" ResizeMode="NoResize">
