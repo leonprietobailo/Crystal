@@ -195,7 +195,7 @@ namespace Crystal
                     {
                         correctedTemperature = mesh.getCellTemperature(i, j);
                     }
-
+                    double aasd = mesh.getCellPhase(i, j);
                     //Correciones de fase
                     if (mesh.getCellPhase(i, j) > 1)
                     {
@@ -209,11 +209,11 @@ namespace Crystal
 
                     else
                     {
-                        correctedPhase = mesh.getCellTemperature(i, j);
+                        correctedPhase = mesh.getCellPhase(i, j);
                     }
 
                     //Se calcula la distribución de colores de acuerdo a una función exponencial
-                    double a = 255 * Math.Pow(1.0 - mesh.getCellPhase(i, j), 1.0 / 4.0);
+                    double a = 255 * Math.Pow(1.0 - correctedPhase, 1.0 / 4.0);
                     double b = 255 * Math.Sqrt(correctedTemperature + 1);
 
                     //Se rellenan los rectángulos con color
