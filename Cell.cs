@@ -34,27 +34,20 @@ namespace Crystal
         {
             //Vector que contiene el conjunto de parámetros
             double[] rules = r.getRules();
-            double m = rules[0];
-            double dt = rules[1];
-            double d = rules[2];
-            double e = rules[3];
-            double b = rules[4];
-            double dx = rules[5];
-            double dy = rules[6];
 
             //Cálculo del gradiente de fase
-            double dPHI2dxy = (pN[2] - 2.0 * phase + pN[1]) / dx / dx + (pN[0] - 2.0 * phase + pN[3]) / dy / dy;
+            double dPHI2dxy = (pN[2] - 2.0 * phase + pN[1]) / rules[5] / rules[5] + (pN[0] - 2.0 * phase + pN[3]) / rules[6] / rules[6];
             //Cálculo de la derivada parcial de la fase con respecto el tiempo
-            double dPHIdt = 1.0 / e / e / m * (phase * (1.0 - phase) * (phase - 1.0 / 2.0 + 30.0 * e * b * d * temperature * phase * (1.0 - phase)) + e * e * dPHI2dxy);
+            double dPHIdt = 1.0 / rules[3] / rules[3] / rules[0] * (phase * (1.0 - phase) * (phase - 1.0 / 2.0 + 30.0 * rules[3] * rules[4] * rules[2] * temperature * phase * (1.0 - phase)) + rules[3] * rules[3] * dPHI2dxy);
 
             //Cálculo del gradiente de temperatura
-            double du2dxy = (uN[2] - 2.0 * temperature + uN[1]) / dx / dx + (uN[0] - 2.0 * temperature + uN[3]) / dy / dy;
+            double du2dxy = (uN[2] - 2.0 * temperature + uN[1]) / rules[5] / rules[5] + (uN[0] - 2.0 * temperature + uN[3]) / rules[6] / rules[6];
             //Cálculo de la derivada parcial de la temperatura con respecto el tiempo
-            double dudt = du2dxy - 1.0 / d * (30.0 * Math.Pow(phase, 2) - 60.0 * Math.Pow(phase, 3) + 30.0 * Math.Pow(phase, 4)) * dPHIdt;
+            double dudt = du2dxy - 1.0 / rules[2] * (30.0 * Math.Pow(phase, 2) - 60.0 * Math.Pow(phase, 3) + 30.0 * Math.Pow(phase, 4)) * dPHIdt;
 
             //Cálculo del próximo estado de fase y temperatura de la celda
-            phaseNext = phase + dPHIdt * dt;
-            temperatureNext = temperature + dudt * dt;
+            phaseNext = phase + dPHIdt * rules[1];
+            temperatureNext = temperature + dudt * rules[1];
         }
 
         //Método que permite establecer el próximo estado de la celda como el estado actual

@@ -35,11 +35,11 @@ namespace Crystal
         {
             //Se añaden las fronteras a las dimensiones introducidas
             radius = iIn + 2;
-            array = new Cell[this.radius, this.radius];
+            array = new Cell[radius, radius];
             //Se rellena la malla con un estado por defecto
-            for (int n = 0; n < this.radius; n++)
+            for (int n = 0; n < radius; n++)
             {
-                for (int s = 0; s < this.radius; s++)
+                for (int s = 0; s < radius; s++)
                 {
                     array[n, s] = new Cell(-1, 1);
                 }
@@ -79,9 +79,9 @@ namespace Crystal
             double totalTemperature = 0;
             double totalPhase = 0;
             //Recorre el grid y va calculando la suma de los valores de fase y temperatura de cada celda
-            for (int n = 1; n < this.radius - 1; n++)
+            for (int n = 1; n < radius - 1; n++)
             {
-                for (int s = 1; s < this.radius - 1; s++)
+                for (int s = 1; s < radius - 1; s++)
                 {
                     totalTemperature += array[n, s].getTemperature();
                     totalPhase += array[n, s].getPhase();
@@ -142,15 +142,14 @@ namespace Crystal
         //Método que permite realizar una iteración calculando el próximo estado de la celda y actualizándolo como estado actual
         public void Iterate()
         {
+            //Se establecen los vectores que contendrán los valores de fase y temperatura de las celdas vecinas
+            double[] uN = new double[4];
+            double[] pN = new double[4];
             //Se calcula el próximo valor de fase y temperatura de cada celda
-            for (int n = 1; n < this.radius - 1; n++)
+            for (int n = 1; n < radius - 1; n++)
             {
-                for (int s = 1; s < this.radius - 1; s++)
+                for (int s = 1; s < radius - 1; s++)
                 {
-                    //Se establecen los vectores que contendrán los valores de fase y temperatura de las celdas vecinas
-                    double[] uN = new double[4];
-                    double[] pN = new double[4];
-
                     //Se obtiene el valor de temperatura de cada celda vecina
                     uN[0] = array[n, s + 1].getTemperature();
                     uN[1] = array[n - 1, s].getTemperature();
@@ -167,9 +166,9 @@ namespace Crystal
                 }
             }
             //Se establece el próximo estado de fase y temperatura de cada celda anteriormente calculado como estado actual
-            for (int n = 1; n < this.radius - 1; n++)
+            for (int n = 1; n < radius - 1; n++)
             {
-                for (int s = 1; s < this.radius - 1; s++)
+                for (int s = 1; s < radius - 1; s++)
                 {
                     array[n, s].setNextStatus();
                 }
@@ -215,9 +214,9 @@ namespace Crystal
                 emptyFile.Close();
 
                 //Recorre el grid de la simulación que se quiere guardar
-                for (int n = 0; n < this.radius; n++)
+                for (int n = 0; n < radius; n++)
                 {
-                    for (int s = 0; s < this.radius; s++)
+                    for (int s = 0; s < radius; s++)
                     {
                         //Escribe en el archivo los valores de temperatura y fase por "|"
                         File.AppendAllText(dig.FileName, Convert.ToString(array[n, s].getTemperature()));

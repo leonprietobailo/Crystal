@@ -103,7 +103,8 @@ namespace Crystal
                     //Características de los rectángulos del grid
                     pRectangle.Width = phaseCanvas.Width / radius;
                     pRectangle.Height = phaseCanvas.Height / radius;
-                    pRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+                    pRectangle.Fill = new SolidColorBrush(Colors.Blue);
+                    pRectangle.Fill.Opacity = 0;
                     pRectangle.StrokeThickness = 0.1;
                     pRectangle.Stroke = Brushes.White;
                     phaseCanvas.Children.Add(pRectangle);
@@ -123,7 +124,8 @@ namespace Crystal
                     //Características de los rectángulos del grid
                     tRectangle.Width = temperatureCanvas.Width / radius;
                     tRectangle.Height = temperatureCanvas.Height / radius;
-                    tRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+                    tRectangle.Fill = new SolidColorBrush(Colors.Red);
+                    tRectangle.Fill.Opacity = 0;
                     tRectangle.StrokeThickness = 0.1;
                     tRectangle.Stroke = Brushes.White;
                     temperatureCanvas.Children.Add(tRectangle);
@@ -172,6 +174,8 @@ namespace Crystal
         //Método que refleja visualmente los cambios de las valores de fase y temperatura de cada celda
         private void updateMesh()
         {
+            SolidColorBrush redColor = Brushes.Red;
+            SolidColorBrush blueColor = Brushes.Blue;
             for (int i = 0; i < radius; i++)
             {
                 for (int j = 0; j < radius; j++)
@@ -212,13 +216,9 @@ namespace Crystal
                         correctedPhase = mesh.getCellPhase(i, j);
                     }
 
-                    //Se calcula la distribución de colores de acuerdo a una función exponencial
-                    double a = 255 * Math.Pow(1.0 - correctedPhase, 1.0 / 4.0);
-                    double b = 255 * Math.Sqrt(correctedTemperature + 1);
-
-                    //Se rellenan los rectángulos con color
-                    phaseRectangles[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(a), 0, 0, 255));
-                    temperatureRectangles[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(b), 255, 0, 0));
+                    //Se cambia la transparencia de la celda siguiento un comportmiento de raíz cuadrada y cuarta
+                    phaseRectangles[i, j].Fill.Opacity = Math.Pow(1.0 - correctedPhase, 1.0 / 4.0);
+                    temperatureRectangles[i, j].Fill.Opacity = Math.Sqrt(correctedTemperature + 1);
                 }
             }
         }
