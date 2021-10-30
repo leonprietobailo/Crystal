@@ -105,8 +105,8 @@
                 </lvc:CartesianChart.Series>
             </lvc:CartesianChart>
             <Label Content="Average Temperature" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="431,363,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="28" Width="255"/>
-            <Canvas Height="300" HorizontalAlignment="Left" Margin="0,24,0,0" x:Name="canvas1" VerticalAlignment="Top" Width="300" Background="#00000000"/>
-            <Canvas Height="300" HorizontalAlignment="Left" Margin="390,24,0,0" x:Name="canvas2" VerticalAlignment="Top" Width="300" Background="#00000000"/>
+            <Canvas Height="300" HorizontalAlignment="Left" Margin="0,24,0,0" x:Name="phaseCanvas" VerticalAlignment="Top" Width="300" Background="#00000000"/>
+            <Canvas Height="300" HorizontalAlignment="Left" Margin="390,24,0,0" x:Name="temperatureCanvas" VerticalAlignment="Top" Width="300" Background="#00000000"/>
             <Label Content="Phase" HorizontalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="300"/>
             <Label Content="Temperature" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="390,0,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Consolas" FontWeight="Bold" Height="24" Width="300"/>
             <Grid Name="Cellstatus">

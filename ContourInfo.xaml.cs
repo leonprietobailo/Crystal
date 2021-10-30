@@ -19,7 +19,6 @@ namespace Crystal
         {
             //Permite visualizar el esquema de los dos contornos posibles
             InitializeComponent();
-
         }
     }
 }

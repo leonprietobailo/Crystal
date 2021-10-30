@@ -15,16 +15,16 @@ namespace Crystal
     public partial class MainWindow : Window
     {
         //Atributos del MainWindow
-        int radius, rowinside, columninside;
-        bool timerStatus, inside, firstgrid;
+        int radius, rowInside, columnInside;
+        bool timerStatus, inside, firstGrid;
         long ticks;
-        Rectangle[,] rectangles1, rectangles2;
+        Rectangle[,] phaseRectangles, temperatureRectangles;
         Stack<Grid> history = new Stack<Grid>();
-        Grid mesh, copy1;
+        Grid mesh, temporaryMesh;
         DispatcherTimer timer = new DispatcherTimer();
         Rules r;
-        ChartValues<double> PhaseValues = new ChartValues<double>();
-        ChartValues<double> TemperatureValues = new ChartValues<double>();
+        ChartValues<double> phaseValues = new ChartValues<double>();
+        ChartValues<double> temperatureValues = new ChartValues<double>();
         public SeriesCollection SeriesCollection;
 
         //Constructor del MainWindow
@@ -54,12 +54,12 @@ namespace Crystal
                     radius = Convert.ToInt32(Radius.Text) * 2 + 1;
                     mesh = new Grid(radius);
                     //Creamos los objetos rectángulos para cada grid (fase y temperatura)
-                    rectangles1 = new Rectangle[radius, radius];
-                    rectangles2 = new Rectangle[radius, radius];
-                    canvas1.Children.Clear();
-                    canvas2.Children.Clear();
+                    phaseRectangles = new Rectangle[radius, radius];
+                    temperatureRectangles = new Rectangle[radius, radius];
+                    phaseCanvas.Children.Clear();
+                    temperatureCanvas.Children.Clear();
 
-                    LOADGRID();
+                    loadGrid();
 
                     //Si el radio es 0, aparece la label de "WRONG INPUTS"
                     if (mesh.getSize() == 0)
@@ -67,7 +67,7 @@ namespace Crystal
                         WIRadius.Visibility = Visibility.Visible;
                     }
 
-                    loadparameters();
+                    loadParameters();
                 }
                 else
                 {
@@ -87,55 +87,55 @@ namespace Crystal
         }
 
         //Evento que permite 
-        private void LOADGRID() 
+        private void loadGrid() 
         {
-            rectangles1 = new Rectangle[radius, radius];
-            rectangles2 = new Rectangle[radius, radius];
-            canvas1.Children.Clear();
-            canvas2.Children.Clear();
+            phaseRectangles = new Rectangle[radius, radius];
+            temperatureRectangles = new Rectangle[radius, radius];
+            phaseCanvas.Children.Clear();
+            temperatureCanvas.Children.Clear();
             for (int i = 0; i < radius; i++)
             {
                 for (int j = 0; j < radius; j++)
                 {
                     //Grid fase
-                    Rectangle rectangle1 = new Rectangle();
+                    Rectangle pRectangle = new Rectangle();
                     //Características de los rectángulos del grid
-                    rectangle1.Width = canvas1.Width / radius;
-                    rectangle1.Height = canvas1.Height / radius;
-                    rectangle1.Fill = new SolidColorBrush(Colors.Transparent);
-                    rectangle1.StrokeThickness = 0.1;
-                    rectangle1.Stroke = Brushes.White;
-                    canvas1.Children.Add(rectangle1);
+                    pRectangle.Width = phaseCanvas.Width / radius;
+                    pRectangle.Height = phaseCanvas.Height / radius;
+                    pRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+                    pRectangle.StrokeThickness = 0.1;
+                    pRectangle.Stroke = Brushes.White;
+                    phaseCanvas.Children.Add(pRectangle);
 
                     //Posición del rectángulo dentro del grid
-                    Canvas.SetTop(rectangle1, i * rectangle1.Height);
-                    Canvas.SetLeft(rectangle1, j * rectangle1.Width);
+                    Canvas.SetTop(pRectangle, i * pRectangle.Height);
+                    Canvas.SetLeft(pRectangle, j * pRectangle.Width);
 
-                    rectangle1.Tag = new Point(i, j);
+                    pRectangle.Tag = new Point(i, j);
                     //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                    rectangle1.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                    rectangle1.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                    rectangles1[i, j] = rectangle1;
+                    pRectangle.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                    pRectangle.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
+                    phaseRectangles[i, j] = pRectangle;
 
                     //Grid temperatura
-                    Rectangle rectangle2 = new Rectangle();
+                    Rectangle tRectangle = new Rectangle();
                     //Características de los rectángulos del grid
-                    rectangle2.Width = canvas2.Width / radius;
-                    rectangle2.Height = canvas2.Height / radius;
-                    rectangle2.Fill = new SolidColorBrush(Colors.Transparent);
-                    rectangle2.StrokeThickness = 0.1;
-                    rectangle2.Stroke = Brushes.White;
-                    canvas2.Children.Add(rectangle2);
+                    tRectangle.Width = temperatureCanvas.Width / radius;
+                    tRectangle.Height = temperatureCanvas.Height / radius;
+                    tRectangle.Fill = new SolidColorBrush(Colors.Transparent);
+                    tRectangle.StrokeThickness = 0.1;
+                    tRectangle.Stroke = Brushes.White;
+                    temperatureCanvas.Children.Add(tRectangle);
 
                     //Posición del rectángulo dentro del grid
-                    Canvas.SetTop(rectangle2, i * rectangle2.Height);
-                    Canvas.SetLeft(rectangle2, j * rectangle2.Width);
+                    Canvas.SetTop(tRectangle, i * tRectangle.Height);
+                    Canvas.SetLeft(tRectangle, j * tRectangle.Width);
 
-                    rectangle2.Tag = new Point(i, j);
+                    tRectangle.Tag = new Point(i, j);
                     //Llamada de evento para saber si he entrado o salido de un rectángulo con el ratón
-                    rectangle2.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
-                    rectangle2.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
-                    rectangles2[i, j] = rectangle2;
+                    tRectangle.MouseEnter += new MouseEventHandler(rectangle_MouseEnter);
+                    tRectangle.MouseLeave += new MouseEventHandler(rectangle_MouseLeave);
+                    temperatureRectangles[i, j] = tRectangle;
                 }
             }
 
@@ -149,8 +149,8 @@ namespace Crystal
 
             //Se limpian los valores guardados de cada uno de los parámetros
             history.Clear();
-            PhaseValues.Clear();
-            TemperatureValues.Clear();
+            phaseValues.Clear();
+            temperatureValues.Clear();
 
             //Se guarda el grid inicial en el historial
             history.Push(mesh.deepCopy());
@@ -160,8 +160,8 @@ namespace Crystal
 
             //Se calcula la fase y temperatura medias de todo el grid
             Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-            PhaseValues.Add(averageTempPhase.Item2);
-            TemperatureValues.Add(averageTempPhase.Item1);
+            phaseValues.Add(averageTempPhase.Item2);
+            temperatureValues.Add(averageTempPhase.Item1);
 
             //Se oculta la label de "WRONG INPUTS" cuando el radio es correcto
             WIRadius.Visibility = Visibility.Hidden;
@@ -184,7 +184,7 @@ namespace Crystal
                     //Correcciones de temperatura
                     if (mesh.getCellTemperature(i, j) < -1)
                     {
-                        correctedTemperature = -1; 
+                        correctedTemperature = -1;
                     }
 
                     else if (mesh.getCellTemperature(i,j) > 0)
@@ -197,7 +197,7 @@ namespace Crystal
                         correctedTemperature = mesh.getCellTemperature(i, j);
                     }
 
-                    //Correciones de fase.
+                    //Correciones de fase
                     if (mesh.getCellPhase(i, j) > 1)
                     {
                         correctedPhase = 1;
@@ -218,8 +218,8 @@ namespace Crystal
                     double b = 255 * Math.Sqrt(correctedTemperature + 1);
 
                     //Se rellenan los rectángulos con color
-                    rectangles1[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(a), 0, 0, 255));
-                    rectangles2[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(b), 255, 0, 0));
+                    phaseRectangles[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(a), 0, 0, 255));
+                    temperatureRectangles[i, j].Fill = new SolidColorBrush(Color.FromArgb(Convert.ToByte(b), 255, 0, 0));
                 }
             }
         }
@@ -229,10 +229,10 @@ namespace Crystal
         {
             SeriesCollection = new SeriesCollection
             {
-                //Gráfica de fase
+                //Gráfica de fase, con sus propiedades
                 new LineSeries
                 {
-                    Values = PhaseValues,
+                    Values = phaseValues,
                     ScalesYAt = 0,
                     Stroke = new SolidColorBrush(Color.FromRgb(75, 75, 255)),
                     Fill = Brushes.Transparent,
@@ -242,10 +242,10 @@ namespace Crystal
             Chart1.Series = SeriesCollection;
             SeriesCollection = new SeriesCollection
             {
-                //Gráfica de temperatura
+                //Gráfica de temperatura, con sus propiedades
                 new LineSeries
                 {
-                Values = TemperatureValues,
+                Values = temperatureValues,
                 ScalesYAt = 0,
                 Stroke = new SolidColorBrush(Color.FromRgb(255, 75, 75)),
                 Fill = Brushes.Transparent,
@@ -271,12 +271,12 @@ namespace Crystal
         //Evento que permite establecer los parámetros de simulación
         private void LoadParameters(object sender, RoutedEventArgs e)
         {
-            loadparameters();
+            loadParameters();
             WrongFile.Visibility = Visibility.Hidden;
         }
 
         //Se cargan los parametros de la malla.
-        private void loadparameters() 
+        private void loadParameters() 
         {
             //Standard A
             if (TabControl.SelectedIndex == 0)
@@ -287,6 +287,7 @@ namespace Crystal
                 Correctparameters.Visibility = Visibility.Visible;
                 Wrongparameters.Visibility = Visibility.Hidden;
             }
+
             //Standard B
             else if (TabControl.SelectedIndex == 1)
             {
@@ -296,6 +297,7 @@ namespace Crystal
                 Correctparameters.Visibility = Visibility.Visible;
                 Wrongparameters.Visibility = Visibility.Hidden;
             }
+
             //Custom
             else if (TabControl.SelectedIndex == 2)
             {
@@ -339,7 +341,15 @@ namespace Crystal
             //Se establce el intervalo de tiempo entre iteraciones??
             timer.Interval = new TimeSpan(ticks);
         }
-
+        private void showStartButton()
+        {
+            buttonStart.Content = "Start";
+            buttonStart.Background = Brushes.Green;
+            buttonStart.BorderBrush = Brushes.White;
+            buttonStart.Foreground = Brushes.White;
+            timer.Stop();
+            timerStatus = false;
+        }
         private void startStop()
         {
             //Si ha comenzado la simulación de forma automatica
@@ -356,12 +366,7 @@ namespace Crystal
             //Si no ha comenzado la simulación de forma automatica
             else
             {
-                buttonStart.Content = "Start";
-                buttonStart.Background = Brushes.Green;
-                buttonStart.BorderBrush = Brushes.White;
-                buttonStart.Foreground = Brushes.White;
-                timer.Stop();
-                timerStatus = false;
+                showStartButton();
             }
         }
         //Evento que permite comenzar la simulación de forma automatica 
@@ -382,8 +387,8 @@ namespace Crystal
             updateMesh();
             //Cálculo de la fase y temperatura medias en cada iteración
             Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-            PhaseValues.Add(averageTempPhase.Item2);
-            TemperatureValues.Add(averageTempPhase.Item1);
+            phaseValues.Add(averageTempPhase.Item2);
+            temperatureValues.Add(averageTempPhase.Item1);
             //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
             insideornot();
         }
@@ -391,7 +396,7 @@ namespace Crystal
         //Evento que permite ejecutar la siguiente iteración de la simulación
         private void nextIteration_Click(object sender, RoutedEventArgs e)
         {   //Detenemos el timer.
-            timer.Stop();
+            showStartButton();
             WrongFile.Visibility = Visibility.Hidden;
             //Se añaden los valores al historial
             history.Push(mesh.deepCopy());
@@ -399,8 +404,8 @@ namespace Crystal
             mesh.Iterate();
             //Cálculo de la fase y temperatura medias en cada iteración
             Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-            PhaseValues.Add(averageTempPhase.Item2);
-            TemperatureValues.Add(averageTempPhase.Item1);
+            phaseValues.Add(averageTempPhase.Item2);
+            temperatureValues.Add(averageTempPhase.Item1);
             //Se actulizan los cambios visualmente
             updateMesh();
             //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
@@ -414,7 +419,7 @@ namespace Crystal
             try
             {
                 //Se detiene reloj.
-                startStop();
+                showStartButton();
                 //Se quita el último elemento del historial
                 if (history.Count > 1)
                 {
@@ -422,10 +427,10 @@ namespace Crystal
                 }
                 
                 //Se quitan los ultimos valores de fase y temperaturas de la gráfica
-                if (PhaseValues.Count != 1)
+                if (phaseValues.Count != 1)
                 {
-                    PhaseValues.RemoveAt(PhaseValues.Count - 1);
-                    TemperatureValues.RemoveAt(TemperatureValues.Count - 1);
+                    phaseValues.RemoveAt(phaseValues.Count - 1);
+                    temperatureValues.RemoveAt(temperatureValues.Count - 1);
                 }
                 //Se actulizan los cambios visualmente
                 updateMesh();
@@ -445,19 +450,19 @@ namespace Crystal
             //Se limpia el historial
             history.Clear();
             //Se para el reloj
-            startStop();
+            showStartButton();
             //Se resetear el grid
             mesh.reset();
             mesh.startCell(mesh.getSize()/2, mesh.getSize()/2);
             //Añadimos una copia del grid al historial
-            history.Push(mesh.deepCopy());//?????????????
+            history.Push(mesh.deepCopy());
             //Se eliminan todos los valors de fase y temperaturas medias de la gráfica
-            PhaseValues.Clear();
-            TemperatureValues.Clear();
+            phaseValues.Clear();
+            temperatureValues.Clear();
             //Cálculo de la fase y temperatura medias en cada iteración
             Tuple<double, double> averageTempPhase = mesh.getAverageTemperaturePhase();
-            PhaseValues.Add(averageTempPhase.Item2);
-            TemperatureValues.Add(averageTempPhase.Item1);
+            phaseValues.Add(averageTempPhase.Item2);
+            temperatureValues.Add(averageTempPhase.Item1);
             //Se actulizan los cambios visualmente
             updateMesh();
             //Actualiza los valores de las labels en las que se informa de la fase y temperatura de la celda sobre la que el usuario tiene el ratón
@@ -467,13 +472,17 @@ namespace Crystal
         //Evento que actualiza y muestra el valor de fase y temperatura de la celda sobre la que se encuentra el ratón del usuario
         private void rectangle_MouseEnter(object sender, MouseEventArgs e)
         {
+            //Obtnemos la ubicación del puntero
             Rectangle reg = (Rectangle)sender;
             Point p = (Point)reg.Tag;
+            //Mostramos las etiquetas correspondientes a los estados de las celdas
             Cellstatus.Visibility = Visibility.Visible;
+            //Actualizamos los valores de fase y temperatura
             CellPhase.Content = Math.Round(mesh.getCellPhase(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)), 5);
             CellTemperature.Content = Math.Round(mesh.getCellTemperature(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)), 5);
-            rowinside = Convert.ToInt32(p.X);
-            columninside = Convert.ToInt32(p.Y);
+            //Actualizamos casilla seleccionada
+            rowInside = Convert.ToInt32(p.X);
+            columnInside = Convert.ToInt32(p.Y);
             p.X++;
             p.Y++;
             Cellcoordinates1.Content = "(" + p.Y + "," + p.X + ")";
@@ -493,8 +502,8 @@ namespace Crystal
         {
             if (inside == true)
             {
-                CellPhase.Content = Math.Round(mesh.getCellPhase(rowinside, columninside), 5);
-                CellTemperature.Content = Math.Round(mesh.getCellTemperature(rowinside, columninside), 5);
+                CellPhase.Content = Math.Round(mesh.getCellPhase(rowInside, columnInside), 5);
+                CellTemperature.Content = Math.Round(mesh.getCellTemperature(rowInside, columnInside), 5);
             }
         }
 
@@ -509,20 +518,24 @@ namespace Crystal
         //Evento que permite cargar la simulación
         private void loadSimualtion_Click(object sender, RoutedEventArgs e)
         {
+            //Detenemos el timer
+            showStartButton();
+            //Si no hay malla creada
             if (mesh == null)
             {
                 mesh = new Grid(0);
+                //Ejecutamos la función loadGrid() y guardamos el resultado
                 int result = mesh.loadGrid();
                 if (result == 0)
                 {
-                    firstgrid = true;
+                    firstGrid = true;
                     //Se establace el radio del grid
-                    int size = new int();
-                    size = mesh.getSize() + 2;
+                    int size = mesh.getSize() + 2;
                     radius = size - 2;
-                    LOADGRID();
-                    loadparameters();
+                    loadGrid();
+                    loadParameters();
                 }
+                //Si la carga del fichero no ha sido satisfactoria
                 else
                 {
                     mesh = null;
@@ -533,9 +546,10 @@ namespace Crystal
                 }
             }
 
-            if (mesh != null && !firstgrid)
+            //Si ya hay una malla creada y no es la primera vez que cargamos fichero
+            if (mesh != null && !firstGrid)
             {
-                copy1 = mesh.deepCopy();
+                temporaryMesh = mesh.deepCopy();
                 int result = mesh.loadGrid();
                 if (result == 0)
                 {
@@ -543,14 +557,15 @@ namespace Crystal
                     int size = new int();
                     size = mesh.getSize() + 2;
                     radius = size - 2;
-                    LOADGRID();
+                    loadGrid();
                 }
                 else
                 {
-                    if (result == -1) ;
+                    //Si la carga del fichero no ha sido satisfactoria
+                    if (result == -1)
                     {
-                        startStop();
-                        mesh = copy1.deepCopy();
+                        
+                        mesh = temporaryMesh.deepCopy();
                         WrongFile.Visibility = Visibility.Visible;
                     }
                 }

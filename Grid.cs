@@ -15,7 +15,7 @@ namespace Crystal
         Cell[,] array;
         Rules r;
 
-        //Constructor del grid
+        //Constructor del grid (desde otro grid).
         public Grid(Grid grid)
         {
             i = grid.i;
@@ -30,11 +30,13 @@ namespace Crystal
             }
         }
 
-        //Constructor del grid
+        //Constructor del grid (con un radio definido)
         public Grid(int iIn)
         {
+            //Se añaden las fronteras a las dimensiones introducidas
             i = iIn + 2;
             array = new Cell[this.i, this.i];
+            //Se rellena la malla con un estado por defecto
             for (int n = 0; n < this.i; n++)
             {
                 for (int s = 0; s < this.i; s++)
@@ -86,6 +88,7 @@ namespace Crystal
                     counter++;
                 }
             }
+            //Se retornan las respectivas medias
             return Tuple.Create(totalTemperature / counter, totalPhase / counter);
         }
 
@@ -297,6 +300,7 @@ namespace Crystal
             {
                 return -1;
             }
+
             //Caso en el que el contenido del archivo que se quiere cargar no sea correcto
             catch (FormatException)
             {
