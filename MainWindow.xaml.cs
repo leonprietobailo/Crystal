@@ -304,11 +304,18 @@ namespace Crystal
                 //Si los parámetros introducidos son correctos
                 try
                 {
-                    r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
-                    mesh.setRules(r);
-                    Correctparameters.Content = "Custom loaded!";
-                    Wrongparameters.Visibility = Visibility.Hidden;
-                    Correctparameters.Visibility = Visibility.Visible;
+                    if(Convert.ToDouble(m3.Text) <= 0 || Convert.ToDouble(dt3.Text) <= 0 || Convert.ToDouble(d3.Text) <= 0 || Convert.ToDouble(e3.Text) <= 0 || Convert.ToDouble(b3.Text) <= 0 || Convert.ToDouble(dx3.Text) <= 0 || Convert.ToDouble(dy3.Text) <= 0)
+                    {
+                        Wrongparameters.Visibility = Visibility.Visible;
+                        Correctparameters.Visibility = Visibility.Hidden;
+                    }
+                    else {
+                        r = new Rules(Convert.ToDouble(m3.Text), Convert.ToDouble(dt3.Text), Convert.ToDouble(d3.Text), Convert.ToDouble(e3.Text), Convert.ToDouble(b3.Text), Convert.ToDouble(dx3.Text), Convert.ToDouble(dy3.Text));
+                        mesh.setRules(r);
+                        Correctparameters.Content = "Custom loaded!";
+                        Wrongparameters.Visibility = Visibility.Hidden;
+                        Correctparameters.Visibility = Visibility.Visible;
+                    }
                 }
                 //Si los paráetros introducidos no son correctos
                 catch (FormatException)
