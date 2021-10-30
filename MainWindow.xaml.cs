@@ -199,7 +199,7 @@ namespace Crystal
                     {
                         correctedTemperature = mesh.getCellTemperature(i, j);
                     }
-                    double aasd = mesh.getCellPhase(i, j);
+
                     //Correciones de fase
                     if (mesh.getCellPhase(i, j) > 1)
                     {
