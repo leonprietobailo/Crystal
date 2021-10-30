@@ -31,8 +31,10 @@ namespace Crystal
         public MainWindow()
         {
             InitializeComponent();
-            //Inicia el evento del reloj para poder realizar la simulación automática
+            //Inicia el evento del reloj para poder realizar la simulación automática y añadimos velocidad predeterminada
             timer.Tick += new EventHandler(dispatcherTimer_Tick);
+            ticks = Convert.ToInt64(1 / 100e-9);
+            timer.Interval = new TimeSpan(ticks);
             //Establecemos los valores del gráfico
             setChartNumbers();
 
@@ -58,7 +60,6 @@ namespace Crystal
                     temperatureRectangles = new Rectangle[radius, radius];
                     phaseCanvas.Children.Clear();
                     temperatureCanvas.Children.Clear();
-
                     loadGrid();
 
                     //Si el radio es 0, aparece la label de "WRONG INPUTS"
@@ -343,12 +344,15 @@ namespace Crystal
         }
         private void showStartButton()
         {
-            buttonStart.Content = "Start";
-            buttonStart.Background = Brushes.Green;
-            buttonStart.BorderBrush = Brushes.White;
-            buttonStart.Foreground = Brushes.White;
-            timer.Stop();
-            timerStatus = false;
+            if (timerStatus)
+            {
+                buttonStart.Content = "Start";
+                buttonStart.Background = Brushes.Green;
+                buttonStart.BorderBrush = Brushes.White;
+                buttonStart.Foreground = Brushes.White;
+                timer.Stop();
+                timerStatus = false;
+            }
         }
         private void startStop()
         {
@@ -368,6 +372,7 @@ namespace Crystal
             {
                 showStartButton();
             }
+
         }
         //Evento que permite comenzar la simulación de forma automatica 
         private void buttonStart_Click(object sender, RoutedEventArgs e)
@@ -511,7 +516,7 @@ namespace Crystal
         private void saveSimulation_Click(object sender, RoutedEventArgs e)
         {
             mesh.saveGrid();
-            timer.Stop();
+            showStartButton();
             WrongFile.Visibility = Visibility.Hidden;
         }
 
