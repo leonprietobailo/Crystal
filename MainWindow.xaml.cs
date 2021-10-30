@@ -86,6 +86,7 @@ namespace GameOfLife
             }
         }
 
+        //Evento que permite 
         private void LOADGRID() 
         {
             rectangles1 = new Rectangle[radius, radius];
